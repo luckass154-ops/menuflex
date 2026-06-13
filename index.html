@@ -13,14 +13,14 @@
                     colors: {
                         dark: '#0A0A0F',
                         darker: '#050508',
-                        purple: '#7B2FFE',
-                        magenta: '#9D29FF',
-                        orange: '#FF9500',
-                        graySoft: '#1E1E2F',
-                        grayMid: '#333344',
-                        textMain: '#F0F0F8',
+                        primary: '#7B2FFE',
+                        primaryLight: '#9D29FF',
+                        accent: '#FF9500',
+                        green: '#22C55E',
+                        graySoft: '#12121F',
+                        grayMid: '#222233',
+                        textMain: '#F8F8FF',
                         textMuted: '#B0B0C8',
-                        success: '#22C55E',
                         danger: '#EF4444'
                     },
                     fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
@@ -29,35 +29,30 @@
         }
     </script>
     <style type="text/tailwindcss">
-        .text-shadow-sm { text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-        .bg-gradient-purple { background: linear-gradient(135deg, #7B2FFE 0%, #9D29FF 100%); }
-        .bg-gradient-orange { background: linear-gradient(135deg, #FF9500 0%, #FF6B00 100%); }
-        .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
-        .scrollbar-thin::-webkit-scrollbar-thumb { background: #444466; border-radius: 2px; }
-        .plan-card { transition: all 0.3s ease; }
-        .plan-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(123, 47, 254, 0.2); }
         .aba { display: none; }
         .aba.ativa { display: block; }
+        .plan-card { transition: all 0.3s ease; }
+        .plan-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(123, 47, 254, 0.2); }
+        .img-produto { width: 100%; height: 160px; object-fit: cover; border-radius: 0.5rem; }
+        .banner-loja { width: 100%; height: 220px; object-fit: cover; border-radius: 0.75rem; }
     </style>
 </head>
 <body class="bg-darker text-textMain font-sans">
 <div class="max-w-7xl mx-auto p-4 md:p-6">
 
-<!-- CABEÇALHO -->
+<!-- CABEÇALHO PRINCIPAL -->
 <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
     <div class="flex items-center gap-3">
-        <div class="text-5xl font-black text-purple">MF</div>
+        <div class="text-5xl font-black text-primary">MF</div>
         <div>
             <h1 class="text-3xl md:text-4xl font-bold">MENUFLEX</h1>
-            <!-- TEXTO ALTERADO AQUI -->
-            <p class="text-textMuted mt-1">Seu Cardápio Digital</p>
+            <p class="text-textMuted mt-1">Seu cardápio digital, do seu jeito</p>
         </div>
     </div>
     <div class="flex gap-3">
-        <button onclick="mostrarAba('planos')" class="px-4 py-2 rounded-lg bg-purple hover:bg-magenta">Planos</button>
+        <button onclick="mostrarAba('planos')" class="px-4 py-2 rounded-lg bg-primary hover:bg-primaryLight">Planos</button>
         <button onclick="mostrarAba('login')" class="px-4 py-2 rounded-lg bg-graySoft hover:bg-grayMid">Entrar</button>
-        <!-- BOTÃO CORRIGIDO -->
-        <button onclick="mostrarAba('cadastro')" class="px-4 py-2 rounded-lg bg-orange hover:bg-[#FF7A00]">Criar Conta Grátis</button>
+        <button onclick="mostrarAba('cadastro')" class="px-4 py-2 rounded-lg bg-accent hover:bg-[#FF7A00]">Criar Conta Grátis</button>
     </div>
 </header>
 
@@ -65,182 +60,229 @@
 <section id="planos" class="aba ativa mb-12">
     <h2 class="text-3xl font-bold text-center mb-8">Escolha seu Plano</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Plano Gratuito -->
-        <div class="plan-card bg-dark rounded-xl border border-grayMid p-6 shadow-lg">
+        <div class="plan-card bg-graySoft rounded-xl border border-grayMid p-6 shadow-lg">
             <h3 class="text-xl font-bold mb-2">Plano Gratuito</h3>
-            <p class="text-3xl font-bold text-success mb-4">R$ 0<span class="text-sm text-textMuted">/mês</span></p>
+            <p class="text-3xl font-bold text-green mb-4">R$ 0<span class="text-sm text-textMuted">/mês</span></p>
             <ul class="space-y-2 text-sm mb-6">
-                <li><i class="fa fa-check text-success mr-2"></i>Até 15 produtos</li>
-                <li><i class="fa fa-check text-success mr-2"></i>3 categorias</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Pedidos via WhatsApp</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Link e QR Code</li>
-                <li><i class="fa fa-times text-danger mr-2"></i>Taxa de entrega automática</li>
-                <li><i class="fa fa-times text-danger mr-2"></i>Relatórios</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Até 15 produtos</li>
+                <li><i class="fa fa-check text-green mr-2"></i>3 categorias</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Pedidos via WhatsApp</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Link exclusivo do cardápio</li>
             </ul>
-            <button onclick="mostrarAba('cadastro')" class="w-full py-2 rounded-lg bg-grayMid hover:bg-gray-600">Começar Grátis</button>
+            <button onclick="irParaCadastro('gratuito')" class="w-full py-2 rounded-lg bg-grayMid hover:bg-gray-600">Começar Grátis</button>
         </div>
 
-        <!-- Plano Básico -->
-        <div class="plan-card bg-dark rounded-xl border-2 border-purple p-6 shadow-lg relative">
-            <span class="absolute -top-3 right-4 bg-purple px-3 py-1 rounded text-xs">Mais Escolhido</span>
+        <div class="plan-card bg-graySoft rounded-xl border-2 border-primary p-6 shadow-lg relative">
+            <span class="absolute -top-3 right-4 bg-primary px-3 py-1 rounded text-xs">Mais Escolhido</span>
             <h3 class="text-xl font-bold mb-2">Plano Básico</h3>
-            <p class="text-3xl font-bold text-purple mb-4">R$ 29,90<span class="text-sm text-textMuted">/mês</span></p>
+            <p class="text-3xl font-bold text-primary mb-4">R$ 29,90<span class="text-sm text-textMuted">/mês</span></p>
             <ul class="space-y-2 text-sm mb-6">
-                <li><i class="fa fa-check text-success mr-2"></i>Produtos ilimitados</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Categorias ilimitadas</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Taxa de entrega por bairro</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Gestão de pedidos</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Pagamento Pix</li>
-                <li><i class="fa fa-times text-danger mr-2"></i>Relatórios avançados</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Produtos ilimitados</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Categorias ilimitadas</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Taxa de entrega por bairro</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Pagamento via Pix</li>
             </ul>
-            <button onclick="irParaCadastro('basico')" class="w-full py-2 rounded-lg bg-gradient-purple hover:opacity-90">Assinar Agora</button>
+            <button onclick="irParaCadastro('basico')" class="w-full py-2 rounded-lg bg-gradient-to-r from-primary to-primaryLight hover:opacity-90">Assinar Agora</button>
         </div>
 
-        <!-- Plano Premium -->
-        <div class="plan-card bg-dark rounded-xl border border-orange p-6 shadow-lg">
+        <div class="plan-card bg-graySoft rounded-xl border border-accent p-6 shadow-lg">
             <h3 class="text-xl font-bold mb-2">Plano Premium</h3>
-            <p class="text-3xl font-bold text-orange mb-4">R$ 49,90<span class="text-sm text-textMuted">/mês</span></p>
+            <p class="text-3xl font-bold text-accent mb-4">R$ 49,90<span class="text-sm text-textMuted">/mês</span></p>
             <ul class="space-y-2 text-sm mb-6">
-                <li><i class="fa fa-check text-success mr-2"></i>Tudo do Básico</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Relatórios completos</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Variações de produtos</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Sem marca MenuFlex</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Domínio personalizado</li>
-                <li><i class="fa fa-check text-success mr-2"></i>Suporte prioritário</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Tudo do Básico</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Relatórios de vendas</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Sem marca MenuFlex</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Suporte prioritário</li>
             </ul>
-            <button onclick="irParaCadastro('premium')" class="w-full py-2 rounded-lg bg-gradient-orange hover:opacity-90">Assinar Agora</button>
+            <button onclick="irParaCadastro('premium')" class="w-full py-2 rounded-lg bg-gradient-to-r from-accent to-red-500 hover:opacity-90">Assinar Agora</button>
         </div>
     </div>
 </section>
 
 <!-- ABA: CADASTRO -->
-<section id="cadastro" class="aba max-w-md mx-auto bg-dark rounded-xl border border-grayMid p-6 shadow-lg">
+<section id="cadastro" class="aba max-w-md mx-auto bg-graySoft rounded-xl border border-grayMid p-6 shadow-lg">
     <h2 class="text-2xl font-bold text-center mb-6">Criar Conta</h2>
     <div class="space-y-4">
         <div>
             <label class="block text-sm mb-1">Nome completo</label>
-            <input type="text" id="cad_nome" class="w-full bg-graySoft border border-grayMid rounded p-2" required>
+            <input type="text" id="cad_nome" class="w-full bg-dark border border-grayMid rounded p-2" required>
         </div>
         <div>
             <label class="block text-sm mb-1">E-mail</label>
-            <input type="email" id="cad_email" class="w-full bg-graySoft border border-grayMid rounded p-2" required>
+            <input type="email" id="cad_email" class="w-full bg-dark border border-grayMid rounded p-2" required>
         </div>
         <div>
             <label class="block text-sm mb-1">Senha</label>
-            <input type="password" id="cad_senha" class="w-full bg-graySoft border border-grayMid rounded p-2" required>
+            <input type="password" id="cad_senha" class="w-full bg-dark border border-grayMid rounded p-2" required>
         </div>
         <div>
-            <label class="block text-sm mb-1">Telefone/WhatsApp</label>
-            <input type="text" id="cad_telefone" class="w-full bg-graySoft border border-grayMid rounded p-2">
+            <label class="block text-sm mb-1">WhatsApp da loja</label>
+            <input type="text" id="cad_telefone" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="Ex: 86999998888">
         </div>
         <div>
             <label class="block text-sm mb-1">Nome da sua loja</label>
-            <input type="text" id="cad_loja" class="w-full bg-graySoft border border-grayMid rounded p-2">
+            <input type="text" id="cad_loja" class="w-full bg-dark border border-grayMid rounded p-2">
         </div>
         <input type="hidden" id="plano_escolhido" value="gratuito">
-        <button onclick="salvarCadastro()" class="w-full bg-gradient-purple py-3 rounded-lg font-semibold">Cadastrar</button>
+        <button onclick="salvarCadastro()" class="w-full bg-gradient-to-r from-primary to-primaryLight py-3 rounded-lg font-semibold">Cadastrar</button>
     </div>
-    <p class="text-center mt-4 text-sm text-textMuted">Já tem conta? <a href="#" onclick="mostrarAba('login')" class="text-purple">Entrar</a></p>
+    <p class="text-center mt-4 text-sm text-textMuted">Já tem conta? <a href="#" onclick="mostrarAba('login')" class="text-primary hover:underline">Entrar</a></p>
 </section>
 
 <!-- ABA: LOGIN -->
-<section id="login" class="aba max-w-md mx-auto bg-dark rounded-xl border border-grayMid p-6 shadow-lg">
+<section id="login" class="aba max-w-md mx-auto bg-graySoft rounded-xl border border-grayMid p-6 shadow-lg">
     <h2 class="text-2xl font-bold text-center mb-6">Acessar Conta</h2>
     <div class="space-y-4">
         <div>
             <label class="block text-sm mb-1">E-mail</label>
-            <input type="email" id="log_email" class="w-full bg-graySoft border border-grayMid rounded p-2" required>
+            <input type="email" id="log_email" class="w-full bg-dark border border-grayMid rounded p-2" required>
         </div>
         <div>
             <label class="block text-sm mb-1">Senha</label>
-            <input type="password" id="log_senha" class="w-full bg-graySoft border border-grayMid rounded p-2" required>
+            <input type="password" id="log_senha" class="w-full bg-dark border border-grayMid rounded p-2" required>
         </div>
-        <button onclick="fazerLogin()" class="w-full bg-gradient-purple py-3 rounded-lg font-semibold">Entrar</button>
+        <button onclick="fazerLogin()" class="w-full bg-gradient-to-r from-primary to-primaryLight py-3 rounded-lg font-semibold">Entrar</button>
     </div>
-    <p class="text-center mt-4 text-sm text-textMuted">Não tem conta? <a href="#" onclick="mostrarAba('cadastro')" class="text-purple">Criar conta grátis</a></p>
+    <p class="text-center mt-4 text-sm text-textMuted">Não tem conta? <a href="#" onclick="mostrarAba('cadastro')" class="text-primary hover:underline">Criar conta grátis</a></p>
 </section>
 
-<!-- ABA: PAINEL E CARDÁPIO -->
+<!-- ABA: PAINEL DO DONO -->
 <section id="painel" class="aba">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold">Bem-vindo ao seu Painel</h2>
-        <button onclick="sairConta()" class="px-3 py-1 rounded bg-red-800/40 text-red-300 hover:bg-red-800/60">Sair</button>
+        <h2 class="text-2xl font-bold">Painel Administrativo</h2>
+        <button onclick="sairConta()" class="px-3 py-1 rounded bg-red-900/40 text-red-300 hover:bg-red-900/60">Sair</button>
     </div>
 
-    <!-- RESUMO -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-dark p-4 rounded-xl border border-grayMid">
-            <p class="text-textMuted text-sm">Seu Plano</p>
-            <h4 class="text-xl font-bold text-purple" id="txt_plano">Gratuito</h4>
+    <!-- DOIS LINKS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div class="bg-graySoft p-5 rounded-xl border border-grayMid shadow-lg">
+            <h3 class="text-lg font-bold mb-2 text-primary">🔗 Link de Edição</h3>
+            <p class="text-sm text-textMuted mb-2">Acesse para alterar seu cardápio</p>
+            <div class="flex gap-2">
+                <input type="text" id="link_editar" readonly class="w-full bg-dark p-2 rounded border border-grayMid text-sm">
+                <button onclick="copiar('link_editar')" class="bg-primary px-3 rounded hover:bg-primaryLight">Copiar</button>
+            </div>
         </div>
-        <div class="bg-dark p-4 rounded-xl border border-grayMid">
-            <p class="text-textMuted text-sm">Produtos Cadastrados</p>
-            <h4 class="text-xl font-bold" id="txt_qtd_prod">0 / 15</h4>
-        </div>
-        <div class="bg-dark p-4 rounded-xl border border-grayMid">
-            <p class="text-textMuted text-sm">Link do Cardápio</p>
-            <button onclick="copiarLink()" class="text-sm text-orange hover:underline">Copiar Link</button>
-        </div>
-        <div class="bg-dark p-4 rounded-xl border border-grayMid">
-            <p class="text-textMuted text-sm">Status</p>
-            <h4 class="text-lg font-bold text-green-400">Ativo</h4>
+        <div class="bg-graySoft p-5 rounded-xl border border-grayMid shadow-lg">
+            <h3 class="text-lg font-bold mb-2 text-accent">📲 Link para Clientes</h3>
+            <p class="text-sm text-textMuted mb-2">Envie para quem vai fazer pedidos</p>
+            <div class="flex gap-2">
+                <input type="text" id="link_cliente" readonly class="w-full bg-dark p-2 rounded border border-grayMid text-sm">
+                <button onclick="copiar('link_cliente')" class="bg-accent px-3 rounded hover:bg-[#FF7A00]">Copiar</button>
+            </div>
         </div>
     </div>
 
-    <!-- CARDÁPIO FUNCIONAL -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div class="lg:col-span-7 bg-dark rounded-xl border border-grayMid overflow-hidden shadow-lg">
-            <div class="h-40 bg-gradient-to-r from-gray-800 to-gray-900 flex items-center p-6">
-                <div>
-                    <h3 class="text-3xl font-bold text-orange" id="nome_loja_painel">Sua Loja</h3>
-                    <p class="text-textMuted">Cardápio Digital</p>
-                </div>
+    <!-- CONFIGURAÇÕES DA LOJA -->
+    <div class="bg-graySoft rounded-xl border border-grayMid p-6 mb-8">
+        <h3 class="text-xl font-bold mb-4">Configurações da Loja</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm mb-2">Logo da Loja</label>
+                <input type="file" id="logo_loja" accept="image/*" class="w-full bg-dark border border-grayMid rounded p-2" onchange="alterarLogo()">
+                <img id="preview_logo" src="https://i.imgur.com/7ZbKQxH.png" class="w-24 h-24 object-contain mt-3 rounded border border-grayMid" alt="Logo">
             </div>
-
-            <div class="p-4">
-                <h4 class="text-lg font-semibold mb-3">Seus Produtos</h4>
-                <div id="lista_produtos" class="grid grid-cols-2 gap-3">
-                    <p class="text-textMuted col-span-2 text-center">Nenhum produto cadastrado ainda.</p>
-                </div>
-                <button onclick="mostrarFormProduto()" class="mt-4 bg-purple px-4 py-2 rounded hover:bg-magenta">+ Adicionar Produto</button>
+            <div>
+                <label class="block text-sm mb-2">Banner de Destaque</label>
+                <input type="file" id="banner_loja" accept="image/*" class="w-full bg-dark border border-grayMid rounded p-2" onchange="alterarBanner()">
+                <img id="preview_banner" src="https://i.imgur.com/9wQZ8fL.jpg" class="banner-loja mt-3" alt="Banner">
             </div>
         </div>
+    </div>
 
-        <!-- CARRINHO E PEDIDO -->
-        <div class="lg:col-span-5 bg-dark rounded-xl border border-grayMid p-5 shadow-lg">
-            <h3 class="text-lg font-semibold mb-4">Exemplo de Pedido</h3>
-            <div class="space-y-3">
-                <p class="text-sm text-textMuted">Quando o cliente acessar seu link, ele verá o cardápio assim e poderá enviar o pedido diretamente para o seu WhatsApp:</p>
-                <button onclick="enviarExemploWhatsApp()" class="w-full bg-gradient-purple py-3 rounded-lg mt-4 font-semibold">
-                    <i class="fa fa-whatsapp mr-2"></i>Testar Envio para WhatsApp
-                </button>
+    <!-- GERENCIAR PRODUTOS -->
+    <div class="bg-graySoft rounded-xl border border-grayMid p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Seus Produtos</h3>
+            <button onclick="adicionarProduto()" class="bg-primary px-4 py-2 rounded hover:bg-primaryLight">+ Novo Produto</button>
+        </div>
+        <div id="lista_produtos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="bg-dark p-4 rounded-xl border border-grayMid">
+                <img src="https://i.imgur.com/5XqQ7yY.jpg" class="img-produto mb-3" alt="Smash Clássico">
+                <h4 class="font-bold text-lg">Smash Clássico</h4>
+                <p class="text-sm text-textMuted mb-2">Pão, carne, queijo, cebola roxa e picles</p>
+                <p class="text-accent font-bold text-lg">R$ 16,90</p>
+                <div class="flex gap-2 mt-3">
+                    <button onclick="editarProduto(0)" class="bg-grayMid px-2 rounded text-sm">Editar</button>
+                    <button onclick="removerProduto(0)" class="bg-red-800 px-2 rounded text-sm">Excluir</button>
+                </div>
+            </div>
+            <div class="bg-dark p-4 rounded-xl border border-grayMid">
+                <img src="https://i.imgur.com/6LkR9tZ.jpg" class="img-produto mb-3" alt="Smash Bacon">
+                <h4 class="font-bold text-lg">Smash Bacon</h4>
+                <p class="text-sm text-textMuted mb-2">Pão, carne, queijo, bacon, molho especial</p>
+                <p class="text-accent font-bold text-lg">R$ 18,90</p>
+                <div class="flex gap-2 mt-3">
+                    <button onclick="editarProduto(1)" class="bg-grayMid px-2 rounded text-sm">Editar</button>
+                    <button onclick="removerProduto(1)" class="bg-red-800 px-2 rounded text-sm">Excluir</button>
+                </div>
+            </div>
+            <div class="bg-dark p-4 rounded-xl border border-grayMid">
+                <img src="https://i.imgur.com/8M7sVnK.jpg" class="img-produto mb-3" alt="Smash Duplo">
+                <h4 class="font-bold text-lg">Smash Duplo</h4>
+                <p class="text-sm text-textMuted mb-2">2 carnes, queijo, molho especial e picles</p>
+                <p class="text-accent font-bold text-lg">R$ 22,90</p>
+                <div class="flex gap-2 mt-3">
+                    <button onclick="editarProduto(2)" class="bg-grayMid px-2 rounded text-sm">Editar</button>
+                    <button onclick="removerProduto(2)" class="bg-red-800 px-2 rounded text-sm">Excluir</button>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- RODAPÉ -->
-<footer class="text-center text-sm text-textMuted mt-10 border-t border-grayMid pt-6">
-    <p>© 2026 MenuFlex — Seu Cardápio Digital</p>
-</footer>
+<!-- ABA: CARDÁPIO PARA CLIENTES -->
+<section id="cardapio_cliente" class="aba max-w-4xl mx-auto">
+    <header class="mb-6">
+        <img id="banner_cliente" src="https://i.imgur.com/9wQZ8fL.jpg" class="banner-loja w-full" alt="Banner da Loja">
+        <div class="mt-4 text-center">
+            <img id="logo_cliente" src="https://i.imgur.com/7ZbKQxH.png" class="w-20 h-20 object-contain mx-auto mb-2" alt="Logo">
+            <h1 class="text-3xl font-bold text-primary" id="nome_loja_cliente">Tempo Burguer</h1>
+            <p class="text-textMuted">Faça seu pedido pelo WhatsApp</p>
+        </div>
+    </header>
+
+    <div class="flex gap-3 overflow-x-auto pb-3 mb-6">
+        <button class="px-4 py-2 rounded-full bg-primary text-white whitespace-nowrap">Smash Burgers</button>
+        <button class="px-4 py-2 rounded-full bg-grayMid text-textMuted whitespace-nowrap">Artesanais</button>
+        <button class="px-4 py-2 rounded-full bg-grayMid text-textMuted whitespace-nowrap">Combos</button>
+        <button class="px-4 py-2 rounded-full bg-grayMid text-textMuted whitespace-nowrap">Bebidas</button>
+        <button class="px-4 py-2 rounded-full bg-grayMid text-textMuted whitespace-nowrap">Acompanhamentos</button>
+    </div>
+
+    <div id="lista_produtos_cliente" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10"></div>
+
+    <div class="bg-graySoft rounded-xl border border-grayMid p-5 sticky bottom-0">
+        <h3 class="text-xl font-bold mb-4">Seu Pedido</h3>
+        <div id="itens_carrinho" class="space-y-3 mb-4"></div>
+        <div class="flex justify-between items-center border-t border-grayMid pt-4 text-lg font-bold">
+            <span>Total:</span>
+            <span id="valor_total">R$ 0,00</span>
+        </div>
+        <button onclick="enviarPedido()" class="w-full bg-primary hover:bg-primaryLight py-3 rounded-lg font-bold mt-4">
+            <i class="fa fa-whatsapp mr-2"></i>Finalizar Pedido
+        </button>
+    </div>
+</section>
 
 </div>
 
-<!-- JAVASCRIPT FUNCIONAL -->
 <script>
-// === SEUS DADOS AQUI ===
+// === SEUS DADOS ===
 const SEU_WHATSAPP = "86999850573";
 const SEU_EMAIL = "luckass154@gmail.com";
 
 let usuarioLogado = null;
+let carrinho = [];
+let baseUrl = window.location.origin + window.location.pathname;
 
 function mostrarAba(nome) {
     document.querySelectorAll('.aba').forEach(aba => aba.classList.remove('ativa'));
     document.getElementById(nome).classList.add('ativa');
 }
 
-function irParaCadastro(planoEscolhido) {
-    document.getElementById('plano_escolhido').value = planoEscolhido;
+function irParaCadastro(plano) {
+    document.getElementById('plano_escolhido').value = plano;
     mostrarAba('cadastro');
 }
 
@@ -252,44 +294,37 @@ function salvarCadastro() {
     const loja = document.getElementById('cad_loja').value.trim();
     const plano = document.getElementById('plano_escolhido').value;
 
-    if(!nome || !email || !senha) {
-        alert('Preencha todos os campos obrigatórios!');
-        return;
-    }
+    if(!nome || !email || !senha) return alert('Preencha todos os campos obrigatórios!');
 
     const usuario = {
         id: Date.now(),
         nome, email, senha, telefone, loja, plano,
-        produtos: []
+        logo: "https://i.imgur.com/7ZbKQxH.png",
+        banner: "https://i.imgur.com/9wQZ8fL.jpg",
+        produtos: [
+            {nome:"Smash Clássico", desc:"Pão, carne, queijo, cebola roxa e picles", preco:16.90, img:"https://i.imgur.com/5XqQ7yY.jpg"},
+            {nome:"Smash Bacon", desc:"Pão, carne, queijo, bacon, molho especial", preco:18.90, img:"https://i.imgur.com/6LkR9tZ.jpg"},
+            {nome:"Smash Duplo", desc:"2 carnes, queijo, molho especial e picles", preco:22.90, img:"https://i.imgur.com/8M7sVnK.jpg"}
+        ]
     };
 
-    // Salva os dados do usuário
     localStorage.setItem('usuario_'+email, JSON.stringify(usuario));
 
-    // === ENVIA AVISO PARA VOCÊ NO WHATSAPP ===
-    const mensagem = `📢 NOVO CADASTRO NO MENUFLEX!%0A%0A` +
-        `👤 Nome: ${nome}%0A` +
-        `🏪 Loja: ${loja || 'Não informado'}%0A` +
-        `📧 E-mail: ${email}%0A` +
-        `📱 Telefone: ${telefone || 'Não informado'}%0A` +
-        `💳 Plano: ${plano.toUpperCase()}%0A%0A` +
-        `Data: ${new Date().toLocaleString('pt-BR')}`;
+    const msg = `📢 NOVO CADASTRO!%0A%0ANome: ${nome}%0ALoja: ${loja}%0AE-mail: ${email}%0AWhatsApp: ${telefone}%0APlano: ${plano.toUpperCase()}`;
+    window.open(`https://wa.me/55${SEU_WHATSAPP}?text=${msg}`, '_blank');
 
-    window.open(`https://wa.me/55${SEU_WHATSAPP}?text=${mensagem}`, '_blank');
-
-    alert('Cadastro realizado com sucesso! Agora faça login.');
+    alert('Cadastro realizado com sucesso! Faça login.');
     mostrarAba('login');
 }
 
 function fazerLogin() {
     const email = document.getElementById('log_email').value.trim();
     const senha = document.getElementById('log_senha').value.trim();
-
     const dados = localStorage.getItem('usuario_'+email);
-    if(!dados) { alert('E-mail não encontrado!'); return; }
+    if(!dados) return alert('E-mail não encontrado!');
 
     const usuario = JSON.parse(dados);
-    if(usuario.senha !== senha) { alert('Senha incorreta!'); return; }
+    if(usuario.senha !== senha) return alert('Senha incorreta!');
 
     usuarioLogado = usuario;
     atualizarPainel();
@@ -297,74 +332,183 @@ function fazerLogin() {
 }
 
 function atualizarPainel() {
-    document.getElementById('txt_plano').textContent = usuarioLogado.plano.charAt(0).toUpperCase() + usuarioLogado.plano.slice(1);
-    document.getElementById('nome_loja_painel').textContent = usuarioLogado.loja || 'Minha Loja';
-    const limite = usuarioLogado.plano === 'gratuito' ? 15 : '∞';
-    document.getElementById('txt_qtd_prod').textContent = `${usuarioLogado.produtos.length} / ${limite}`;
-    listarProdutos();
+    document.getElementById('link_editar').value = `${baseUrl}?id=${usuarioLogado.id}&modo=admin`;
+    document.getElementById('link_cliente').value = `${baseUrl}?id=${usuarioLogado.id}&modo=cliente`;
+    document.getElementById('preview_logo').src = usuarioLogado.logo;
+    document.getElementById('preview_banner').src = usuarioLogado.banner;
+    listarProdutosPainel();
 }
 
-function listarProdutos() {
+function listarProdutosPainel() {
     const container = document.getElementById('lista_produtos');
-    if(usuarioLogado.produtos.length === 0) {
-        container.innerHTML = `<p class="text-textMuted col-span-2 text-center">Nenhum produto cadastrado ainda.</p>`;
-        return;
-    }
     let html = '';
     usuarioLogado.produtos.forEach((p, i) => {
-        html += `<div class="bg-graySoft p-3 rounded border border-grayMid">
-            <h5 class="font-bold">${p.nome}</h5>
-            <p class="text-xs text-textMuted">${p.descricao}</p>
-            <p class="text-orange font-bold mt-1">R$ ${p.preco.toFixed(2)}</p>
-            <button onclick="removerProduto(${i})" class="text-xs text-red-400 mt-2">Remover</button>
+        html += `<div class="bg-dark p-4 rounded-xl border border-grayMid">
+            <img src="${p.img}" class="img-produto mb-3" alt="${p.nome}">
+            <h4 class="font-bold text-lg">${p.nome}</h4>
+            <p class="text-sm text-textMuted mb-2">${p.desc}</p>
+            <p class="text-accent font-bold text-lg">R$ ${p.preco.toFixed(2).replace('.', ',')}</p>
+            <div class="flex gap-2 mt-3">
+                <button onclick="editarProduto(${i})" class="bg-grayMid px-2 rounded text-sm">Editar</button>
+                <button onclick="removerProduto(${i})" class="bg-red-800 px-2 rounded text-sm">Excluir</button>
+            </div>
         </div>`;
     });
     container.innerHTML = html;
 }
 
-function mostrarFormProduto() {
-    const limite = usuarioLogado.plano === 'gratuito' ? 15 : 9999;
-    if(usuarioLogado.produtos.length >= limite) {
-        alert(`Você atingiu o limite do seu plano! Faça upgrade para cadastrar mais.`);
-        return;
+function alterarLogo() {
+    const arquivo = document.getElementById('logo_loja').files[0];
+    if(arquivo) {
+        const leitor = new FileReader();
+        leitor.onload = function(e) {
+            usuarioLogado.logo = e.target.result;
+            document.getElementById('preview_logo').src = e.target.result;
+            salvarAlteracoes();
+        };
+        leitor.readAsDataURL(arquivo);
     }
-    const nome = prompt('Nome do produto:');
-    if(!nome) return;
-    const descricao = prompt('Descrição:');
-    const preco = parseFloat(prompt('Preço (ex: 19.90):'));
-    if(!preco || preco <= 0) { alert('Preço inválido!'); return; }
+}
 
-    usuarioLogado.produtos.push({ nome, descricao, preco });
+function alterarBanner() {
+    const arquivo = document.getElementById('banner_loja').files[0];
+    if(arquivo) {
+        const leitor = new FileReader();
+        leitor.onload = function(e) {
+            usuarioLogado.banner = e.target.result;
+            document.getElementById('preview_banner').src = e.target.result;
+            salvarAlteracoes();
+        };
+        leitor.readAsDataURL(arquivo);
+    }
+}
+
+function salvarAlteracoes() {
     localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
-    atualizarPainel();
 }
 
-function removerProduto(indice) {
-    usuarioLogado.produtos.splice(indice, 1);
-    localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
-    atualizarPainel();
-}
-
-function copiarLink() {
-    const link = `https://seusite.com/cardapio.html?u=${usuarioLogado.id}`;
-    navigator.clipboard.writeText(link);
-    alert('Link copiado com sucesso!');
-}
-
-function enviarExemploWhatsApp() {
-    const numero = usuarioLogado.telefone.replace(/\D/g, '');
-    const mensagem = `Olá! Gostaria de fazer um pedido:%0A%0A` +
-        `Loja: ${usuarioLogado.loja}%0A` +
-        `------------------------%0A` +
-        `X-Bacon - R$ 19,90%0A` +
-        `Refri 2L - R$ 12,00%0A%0A` +
-        `Total: R$ 31,90`;
-    window.open(`https://wa.me/55${numero}?text=${mensagem}`, '_blank');
+function copiar(idCampo) {
+    const campo = document.getElementById(idCampo);
+    campo.select();
+    document.execCommand('copy');
+    alert('Link copiado!');
 }
 
 function sairConta() {
     usuarioLogado = null;
     mostrarAba('planos');
+}
+
+// Carregar modo automatico pela URL
+window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const modo = params.get('modo');
+
+    if(id && modo === 'cliente') {
+        const usuario = encontrarUsuarioPorId(id);
+        if(usuario) carregarCardapioCliente(usuario);
+    } else if(id && modo === 'admin') {
+        alert('Para acessar o painel, faça login normalmente.');
+    }
+};
+
+function encontrarUsuarioPorId(id) {
+    const chaves = Object.keys(localStorage);
+    for(let chave of chaves) {
+        if(chave.startsWith('usuario_')) {
+            const u = JSON.parse(localStorage.getItem(chave));
+            if(u.id == id) return u;
+        }
+    }
+    return null;
+}
+
+function carregarCardapioCliente(usuario) {
+    document.getElementById('banner_cliente').src = usuario.banner;
+    document.getElementById('logo_cliente').src = usuario.logo;
+    document.getElementById('nome_loja_cliente').textContent = usuario.loja;
+    const container = document.getElementById('lista_produtos_cliente');
+    let html = '';
+    usuario.produtos.forEach((p, i) => {
+        html += `<div class="bg-graySoft p-4 rounded-xl border border-grayMid">
+            <img src="${p.img}" class="img-produto mb-3" alt="${p.nome}">
+            <h4 class="font-bold text-lg">${p.nome}</h4>
+            <p class="text-sm text-textMuted mb-2">${p.desc}</p>
+            <p class="text-accent font-bold text-lg">R$ ${p.preco.toFixed(2).replace('.', ',')}</p>
+            <button onclick="adicionarItem(${i}, '${p.nome}', ${p.preco})" class="w-full bg-primary hover:bg-primaryLight py-2 rounded mt-3">Adicionar</button>
+        </div>`;
+    });
+    container.innerHTML = html;
+    mostrarAba('cardapio_cliente');
+}
+
+function adicionarItem(i, nome, preco) {
+    carrinho.push({nome, preco});
+    atualizarCarrinho();
+}
+
+function atualizarCarrinho() {
+    const container = document.getElementById('itens_carrinho');
+    let total = 0;
+    let html = '';
+    carrinho.forEach((item, i) => {
+        total += item.preco;
+        html += `<div class="flex justify-between items-center">
+            <span>${item.nome}</span>
+            <span>R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
+        </div>`;
+    });
+    if(carrinho.length === 0) html = '<p class="text-textMuted">Nenhum item adicionado</p>';
+    container.innerHTML = html;
+    document.getElementById('valor_total').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+}
+
+function enviarPedido() {
+    if(carrinho.length === 0) return alert('Adicione pelo menos um item!');
+    const usuario = encontrarUsuarioPorId(new URLSearchParams(window.location.search).get('id'));
+    let msg = `📋 NOVO PEDIDO%0A%0A🏪 Loja: ${usuario.loja}%0A%0A🛒 Itens:%0A`;
+    let total = 0;
+    carrinho.forEach(item => {
+        msg += `• ${item.nome} - R$ ${item.preco.toFixed(2).replace('.', ',')}%0A`;
+        total += item.preco;
+    });
+    msg += `%0A💵 Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+    const numero = usuario.telefone.replace(/\D/g, '');
+    window.open(`https://wa.me/55${numero}?text=${msg}`, '_blank');
+}
+
+function adicionarProduto() {
+    const nome = prompt('Nome do produto:');
+    if(!nome) return;
+    const desc = prompt('Descrição:');
+    const preco = parseFloat(prompt('Preço (ex: 19.90):'));
+    if(!preco || preco <= 0) return alert('Preço inválido!');
+    const img = prompt('Link da imagem (ou deixe vazio para usar padrão):') || "https://i.imgur.com/7ZbKQxH.png";
+    usuarioLogado.produtos.push({nome, desc, preco, img});
+    salvarAlteracoes();
+    listarProdutosPainel();
+}
+
+function editarProduto(i) {
+    const p = usuarioLogado.produtos[i];
+    const nome = prompt('Nome:', p.nome);
+    if(!nome) return;
+    const desc = prompt('Descrição:', p.desc);
+    const preco = parseFloat(prompt('Preço:', p.preco));
+    const img = prompt('Link da imagem:', p.img);
+    if(!preco || preco <= 0) return alert('Preço inválido!');
+    usuarioLogado.produtos[i] = {nome, desc, preco, img};
+    salvarAlteracoes();
+    listarProdutosPainel();
+}
+
+function removerProduto(i) {
+    if(confirm('Tem certeza que deseja excluir?')) {
+        usuarioLogado.produtos.splice(i, 1);
+        salvarAlteracoes();
+        listarProdutosPainel();
+    }
 }
 </script>
 
