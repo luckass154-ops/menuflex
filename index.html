@@ -32,12 +32,14 @@
     </script>
     <style type="text/tailwindcss">
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: linear-gradient(180deg, #050508 0%, #0A0A0F 100%); }
+        body { background: linear-gradient(180deg, #050508 0%, #0A0A0F 100%); min-height: 100vh; }
         .aba { display: none; }
         .aba.ativa { display: block; }
+        .secao { display: none; }
+        .secao.ativa { display: block; }
         .img-produto { width: 100%; height: 160px; object-fit: cover; border-radius: 0.5rem; }
         .banner-loja { width: 100%; height: 240px; object-fit: cover; border-radius: 0.75rem; }
-        .sidebar { width: 220px; background: #0F0F1A; border-right: 1px solid #222233; }
+        .sidebar { width: 220px; background: #0F0F1A; border-right: 1px solid #222233; border-radius: 0.75rem; }
         .stat-card { background: #12121F; border: 1px solid #222233; border-radius: 0.75rem; }
         .table-row { border-bottom: 1px solid #222233; transition: background 0.2s; }
         .table-row:hover { background: #1A1A2E; }
@@ -49,7 +51,7 @@
         .status-preparo { color: #FF9500; background: rgba(255, 149, 0, 0.1); padding: 2px 8px; border-radius: 4px; font-size: 12px; }
         .status-entregue { color: #3B82F6; background: rgba(59, 130, 246, 0.1); padding: 2px 8px; border-radius: 4px; font-size: 12px; }
         .categoria-ativa { background: #7B2FFE; color: white; }
-        .categoria { background: #1A1A2E; color: #B0B0C8; border-radius: 999px; padding: 8px 16px; font-size: 14px; transition: all 0.2s; }
+        .categoria { background: #1A1A2E; color: #B0B0C8; border-radius: 999px; padding: 8px 16px; font-size: 14px; transition: all 0.2s; border: none; }
         .categoria:hover { background: #222233; }
         .badge-promo { background: #FF9500; color: #000; font-size: 10px; padding: 2px 6px; border-radius: 4px; position: absolute; top: 8px; right: 8px; font-weight: bold; }
         .pedido-card { background: #12121F; border: 1px solid #222233; border-radius: 0.75rem; }
@@ -57,7 +59,7 @@
         .check-circle { width: 80px; height: 80px; border-radius: 50%; background: #7B2FFE; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 40px; color: white; }
     </style>
 </head>
-<body class="text-textMain font-sans min-h-screen">
+<body class="text-textMain font-sans">
 <div class="max-w-7xl mx-auto p-4 md:p-6">
 
 <!-- CABEÇALHO PRINCIPAL -->
@@ -76,7 +78,7 @@
     </div>
 </header>
 
-<!-- ABA: TELA INICIAL -->
+<!-- ABA: TELA INICIAL (COM FOTO DO CELULAR) -->
 <section id="inicio" class="aba ativa mb-16">
     <div class="grid md:grid-cols-2 gap-12 items-center">
         <div>
@@ -112,7 +114,8 @@
             </p>
         </div>
         <div class="flex justify-center">
-            <img src="https://i.imgur.com/7ZbKQxH.png" alt="Aplicativo MenuFlex" class="max-w-full h-auto rounded-xl shadow-2xl shadow-primary/20">
+            <!-- FOTO DO CELULAR IGUAL A QUE VOCÊ ENVIOU -->
+            <img src="https://i.imgur.com/9wQZ8fL.jpg" alt="Visual do cardápio no celular" class="max-w-xs h-auto rounded-xl shadow-2xl shadow-primary/20">
         </div>
     </div>
 </section>
@@ -209,7 +212,7 @@
 <section id="painel" class="aba">
     <div class="flex flex-col md:flex-row gap-6">
         <!-- Barra Lateral -->
-        <aside class="sidebar rounded-xl p-4 h-fit">
+        <aside class="sidebar p-4 h-fit">
             <div class="mb-6 pb-4 border-b border-grayMid">
                 <h3 class="font-bold text-lg">MENUFLEX</h3>
                 <p class="text-xs text-textMuted">Olá, Admin</p>
@@ -228,7 +231,7 @@
             </nav>
         </aside>
 
-        <!-- Conteúdo Principal do Painel -->
+        <!-- Conteúdo Principal -->
         <main class="flex-1">
             <!-- Dashboard -->
             <div id="dashboard" class="secao ativa">
@@ -296,22 +299,6 @@
                                     <td><span class="status-preparo">Em preparo</span></td>
                                     <td>18:30</td>
                                 </tr>
-                                <tr class="table-row">
-                                    <td class="py-3">#1025</td>
-                                    <td>Ana Souza</td>
-                                    <td>Centro</td>
-                                    <td>R$ 47,80</td>
-                                    <td><span class="status-preparo">Saiu para entrega</span></td>
-                                    <td>18:15</td>
-                                </tr>
-                                <tr class="table-row">
-                                    <td class="py-3">#1024</td>
-                                    <td>Carlos Lima</td>
-                                    <td>Promorar</td>
-                                    <td>R$ 31,90</td>
-                                    <td><span class="status-entregue">Entregue</span></td>
-                                    <td>17:50</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -319,7 +306,7 @@
             </div>
 
             <!-- Produtos -->
-            <div id="produtos" class="secao hidden">
+            <div id="produtos" class="secao">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Produtos</h2>
                     <button onclick="adicionarProduto()" class="btn-primary px-4 py-2 flex items-center gap-2">+ Novo produto</button>
@@ -350,20 +337,13 @@
                                 <td><span class="status-ativo">Ativo</span></td>
                                 <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
                             </tr>
-                            <tr class="table-row">
-                                <td class="py-3 flex items-center gap-2"><img src="https://i.imgur.com/8M7sVnK.jpg" class="w-8 h-8 rounded"> Smash Duplo</td>
-                                <td>Smash Burgers</td>
-                                <td>R$ 22,90</td>
-                                <td><span class="status-ativo">Ativo</span></td>
-                                <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Bairros e Taxas -->
-            <div id="bairros" class="secao hidden">
+            <!-- Bairros -->
+            <div id="bairros" class="secao">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Bairros e Taxas</h2>
                     <button onclick="adicionarBairro()" class="btn-primary px-4 py-2 flex items-center gap-2">+ Novo bairro</button>
@@ -388,28 +368,18 @@
                                 <td>R$ 6,00</td>
                                 <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
                             </tr>
-                            <tr class="table-row">
-                                <td class="py-3">Centro</td>
-                                <td>R$ 8,00</td>
-                                <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="py-3">Parque Alvorada</td>
-                                <td>R$ 6,00</td>
-                                <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Outras seções vazias mas funcionais -->
-            <div id="pedidos" class="secao hidden"><h2 class="text-2xl font-bold mb-6">Pedidos</h2><div class="stat-card p-6">Lista de pedidos recebidos</div></div>
-            <div id="categorias" class="secao hidden"><h2 class="text-2xl font-bold mb-6">Categorias</h2><div class="stat-card p-6">Gerencie as categorias do seu cardápio</div></div>
-            <div id="clientes" class="secao hidden"><h2 class="text-2xl font-bold mb-6">Clientes</h2><div class="stat-card p-6">Lista de clientes cadastrados</div></div>
-            <div id="promocoes" class="secao hidden"><h2 class="text-2xl font-bold mb-6">Promoções</h2><div class="stat-card p-6">Crie e gerencie promoções</div></div>
-            <div id="relatorios" class="secao hidden"><h2 class="text-2xl font-bold mb-6">Relatórios</h2><div class="stat-card p-6">Análise de vendas e desempenho</div></div>
-            <div id="configuracoes" class="secao hidden">
+            <!-- Outras seções -->
+            <div id="pedidos" class="secao"><h2 class="text-2xl font-bold mb-6">Pedidos</h2><div class="stat-card p-6">Lista de pedidos recebidos</div></div>
+            <div id="categorias" class="secao"><h2 class="text-2xl font-bold mb-6">Categorias</h2><div class="stat-card p-6">Gerencie categorias</div></div>
+            <div id="clientes" class="secao"><h2 class="text-2xl font-bold mb-6">Clientes</h2><div class="stat-card p-6">Lista de clientes</div></div>
+            <div id="promocoes" class="secao"><h2 class="text-2xl font-bold mb-6">Promoções</h2><div class="stat-card p-6">Gerencie promoções</div></div>
+            <div id="relatorios" class="secao"><h2 class="text-2xl font-bold mb-6">Relatórios</h2><div class="stat-card p-6">Análise de vendas</div></div>
+            <div id="configuracoes" class="secao">
                 <h2 class="text-2xl font-bold mb-6">Configurações da Loja</h2>
                 <div class="stat-card p-6 space-y-4">
                     <div>
@@ -429,7 +399,7 @@
                         </div>
                         <div>
                             <label class="block text-sm mb-2">Nome da conta Pix</label>
-                            <input type="text" id="nome_pix" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="Nome completo ou razão social">
+                            <input type="text" id="nome_pix" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="Nome completo">
                         </div>
                     </div>
                     <button onclick="salvarConfiguracoes()" class="btn-primary px-6 py-2">Salvar Alterações</button>
@@ -447,7 +417,6 @@
 
 <!-- ABA: CARDÁPIO PARA CLIENTE -->
 <section id="cardapio_cliente" class="aba max-w-5xl mx-auto">
-    <!-- Tela Principal do Cardápio -->
     <div id="tela_cardapio" class="mb-8">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold">MENUFLEX</h2>
@@ -498,106 +467,68 @@
         <button onclick="abrirCarrinho()" class="w-full btn-primary py-3 text-lg font-bold">Meu Pedido <span id="contador_itens" class="bg-white text-primary rounded-full px-2 text-sm ml-2">0</span></button>
     </div>
 
-    <!-- Tela do Carrinho -->
     <div id="tela_carrinho" class="hidden">
         <div class="flex justify-between items-center mb-6">
             <button onclick="voltarCardapio()"><i class="fa fa-arrow-left"></i></button>
             <h2 class="text-xl font-bold">Meu Pedido</h2>
             <button><i class="fa fa-trash"></i></button>
         </div>
-        <div id="lista_itens_carrinho" class="space-y-4 mb-6">
-            <div class="pedido-card p-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <img src="https://i.imgur.com/6LkR9tZ.jpg" class="w-12 h-12 rounded object-cover">
-                    <div>
-                        <h4>Smash Bacon</h4>
-                        <p class="text-sm text-textMuted">2x R$ 18,90</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button class="w-8 h-8 rounded bg-grayMid">-</button>
-                    <span>2</span>
-                    <button class="w-8 h-8 rounded bg-grayMid">+</button>
-                </div>
-                <span>R$ 37,80</span>
-            </div>
-            <div class="pedido-card p-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <img src="https://i.imgur.com/9wQZ8fL.jpg" class="w-12 h-12 rounded object-cover">
-                    <div>
-                        <h4>Coca-Cola 2L</h4>
-                        <p class="text-sm text-textMuted">1x R$ 12,00</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button class="w-8 h-8 rounded bg-grayMid">-</button>
-                    <span>1</span>
-                    <button class="w-8 h-8 rounded bg-grayMid">+</button>
-                </div>
-                <span>R$ 12,00</span>
-            </div>
-        </div>
+        <div id="lista_itens_carrinho" class="space-y-4 mb-6"></div>
         <div class="pedido-card p-4 mb-6">
             <div class="flex justify-between items-center mb-2">
                 <span>Subtotal</span>
-                <span>R$ 58,70</span>
+                <span id="valor_subtotal">R$ 0,00</span>
             </div>
             <div class="flex justify-between items-center mb-4">
                 <span>Entrega</span>
-                <select class="bg-graySoft border border-grayMid rounded p-1">
-                    <option>Promorar - R$ 5,00</option>
-                    <option>Bela Vista - R$ 6,00</option>
-                    <option>Centro - R$ 8,00</option>
+                <select id="bairro_entrega" class="bg-graySoft border border-grayMid rounded p-1">
+                    <option value="5.00">Promorar - R$ 5,00</option>
+                    <option value="6.00">Bela Vista - R$ 6,00</option>
+                    <option value="8.00">Centro - R$ 8,00</option>
                 </select>
             </div>
             <div class="flex justify-between items-center text-xl font-bold border-t border-grayMid pt-4">
                 <span>Total</span>
-                <span class="text-primary">R$ 63,70</span>
+                <span id="valor_total" class="text-primary">R$ 0,00</span>
             </div>
         </div>
         <button onclick="abrirTelaPix()" class="w-full btn-primary py-3 text-lg font-bold">Finalizar Pedido</button>
     </div>
 
-    <!-- Tela de Confirmação e Pix -->
     <div id="tela_pix" class="hidden">
         <div class="check-circle">✓</div>
-        <h2 class="text-2xl font-bold text-center mb-2">Pedido #1027</h2>
-        <p class="text-center text-textMuted mb-6">Seu pedido foi recebido! Em instantes, você será atendido pelo WhatsApp.</p>
+        <h2 class="text-2xl font-bold text-center mb-2">Pedido Recebido</h2>
+        <p class="text-center text-textMuted mb-6">Em instantes você será atendido.</p>
         <div class="pix-card mb-6">
             <h3 class="text-xl font-bold mb-4">Pagamento via Pix</h3>
-            <p class="mb-4">Para agilizar o preparo, realize o pagamento via Pix:</p>
-            <div class="bg-white/20 p-3 rounded mb-4 break-all">
-                <span id="chave_pix_mostrar">86 99999-9999</span>
-            </div>
-            <p class="text-sm mb-2">Favorecido: <span id="nome_pix_mostrar">Tempo Burguer LTDA</span></p>
-            <p class="text-sm mb-4">Banco: <span>Nubank</span></p>
-            <p class="text-xl font-bold mb-6">Valor: R$ 63,70</p>
+            <p class="mb-4">Chave Pix:</p>
+            <div class="bg-white/20 p-3 rounded mb-4 break-all" id="chave_pix_mostrar">86999999999</div>
+            <p class="text-sm mb-2">Favorecido: <span id="nome_pix_mostrar">Sua Loja LTDA</span></p>
+            <p class="text-xl font-bold mb-6">Valor: <span id="valor_pix">R$ 0,00</span></p>
             <button onclick="copiarChavePix()" class="w-full bg-accent text-black font-bold py-3 rounded-lg">Copiar chave Pix</button>
         </div>
         <button onclick="voltarCardapio()" class="w-full bg-grayMid py-3 rounded-lg">Voltar para o início</button>
-        <p class="text-xs text-center text-textMuted mt-4">Após o pagamento, envie o comprovante pelo WhatsApp</p>
     </div>
 </section>
 
 </div>
 
 <script>
-// === SEUS DADOS ===
+// === DADOS GERAIS ===
 const SEU_WHATSAPP = "86999850573";
-const SEU_EMAIL = "luckass154@gmail.com";
-
 let usuarioLogado = null;
 let carrinho = [];
 let baseUrl = window.location.origin + window.location.pathname;
 
+// === FUNÇÕES DE NAVEGAÇÃO ===
 function mostrarAba(nome) {
     document.querySelectorAll('.aba').forEach(aba => aba.classList.remove('ativa'));
     document.getElementById(nome).classList.add('ativa');
 }
 
 function mostrarSecao(nome) {
-    document.querySelectorAll('.secao').forEach(sec => sec.classList.add('hidden'));
-    document.getElementById(nome).classList.remove('hidden');
+    document.querySelectorAll('.secao').forEach(sec => sec.classList.remove('ativa'));
+    document.getElementById(nome).classList.add('ativa');
 }
 
 function irParaCadastro(plano) {
@@ -605,6 +536,7 @@ function irParaCadastro(plano) {
     mostrarAba('cadastro');
 }
 
+// === CADASTRO E LOGIN ===
 function salvarCadastro() {
     const nome = document.getElementById('cad_nome').value.trim();
     const email = document.getElementById('cad_email').value.trim();
@@ -613,7 +545,7 @@ function salvarCadastro() {
     const loja = document.getElementById('cad_loja').value.trim();
     const plano = document.getElementById('plano_escolhido').value;
 
-    if(!nome || !email || !senha) return alert('Preencha todos os campos obrigatórios!');
+    if(!nome || !email || !senha) return alert('Preencha todos os campos!');
 
     const usuario = {
         id: Date.now(),
@@ -631,17 +563,12 @@ function salvarCadastro() {
         bairros: [
             {nome:"Promorar", taxa:5.00},
             {nome:"Bela Vista", taxa:6.00},
-            {nome:"Centro", taxa:8.00},
-            {nome:"Parque Alvorada", taxa:6.00}
+            {nome:"Centro", taxa:8.00}
         ]
     };
 
     localStorage.setItem('usuario_'+email, JSON.stringify(usuario));
-
-    const msg = `📢 NOVO CADASTRO!%0A%0ANome: ${nome}%0ALoja: ${loja}%0AE-mail: ${email}%0AWhatsApp: ${telefone}%0APlano: ${plano.toUpperCase()}`;
-    window.open(`https://wa.me/55${SEU_WHATSAPP}?text=${msg}`, '_blank');
-
-    alert('Cadastro realizado com sucesso! Faça login.');
+    alert('Cadastro realizado! Faça login para acessar.');
     mostrarAba('login');
 }
 
@@ -660,62 +587,71 @@ function fazerLogin() {
 }
 
 function atualizarPainel() {
-    document.getElementById('link_editar').value = `${baseUrl}?id=${usuarioLogado.id}&modo=admin`;
-    document.getElementById('link_cliente').value = `${baseUrl}?id=${usuarioLogado.id}&modo=cliente`;
-    document.getElementById('preview_logo').src = usuarioLogado.logo;
-    document.getElementById('preview_banner').src = usuarioLogado.banner;
-    document.getElementById('chave_pix').value = usuarioLogado.chavePix || "";
-    document.getElementById('nome_pix').value = usuarioLogado.nomePix || "";
-}
-
-function alterarLogo() {
-    const arquivo = document.getElementById('logo_loja').files[0];
-    if(arquivo) {
-        const leitor = new FileReader();
-        leitor.onload = function(e) {
-            usuarioLogado.logo = e.target.result;
-            document.getElementById('preview_logo').src = e.target.result;
-            salvarAlteracoes();
-        };
-        leitor.readAsDataURL(arquivo);
-    }
-}
-
-function alterarBanner() {
-    const arquivo = document.getElementById('banner_loja').files[0];
-    if(arquivo) {
-        const leitor = new FileReader();
-        leitor.onload = function(e) {
-            usuarioLogado.banner = e.target.result;
-            document.getElementById('preview_banner').src = e.target.result;
-            salvarAlteracoes();
-        };
-        leitor.readAsDataURL(arquivo);
-    }
-}
-
-function salvarConfiguracoes() {
-    usuarioLogado.chavePix = document.getElementById('chave_pix').value.trim();
-    usuarioLogado.nomePix = document.getElementById('nome_pix').value.trim();
-    salvarAlteracoes();
-    alert('Configurações salvas!');
-}
-
-function salvarAlteracoes() {
-    localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
-}
-
-function copiarCampo(idCampo) {
-    const campo = document.getElementById(idCampo);
-    campo.select();
-    document.execCommand('copy');
-    alert('Link copiado!');
+    // Adiciona os links no painel
+    if(document.getElementById('link_editar')) document.getElementById('link_editar').value = `${baseUrl}?id=${usuarioLogado.id}&modo=admin`;
+    if(document.getElementById('link_cliente')) document.getElementById('link_cliente').value = `${baseUrl}?id=${usuarioLogado.id}&modo=cliente`;
 }
 
 function sairConta() {
     usuarioLogado = null;
     mostrarAba('inicio');
 }
+
+// === CARRINHO E PEDIDOS ===
+function adicionarAoCarrinho(nome, preco) {
+    carrinho.push({nome, preco, qtd:1});
+    document.getElementById('contador_itens').textContent = carrinho.length;
+    atualizarResumo();
+}
+
+function atualizarResumo() {
+    let subtotal = carrinho.reduce((s, i) => s + (i.preco * i.qtd), 0);
+    let entrega = parseFloat(document.getElementById('bairro_entrega')?.value || 0);
+    let total = subtotal + entrega;
+    document.getElementById('valor_subtotal').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+    document.getElementById('valor_total').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    document.getElementById('valor_pix').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+}
+
+function abrirCarrinho() {
+    document.getElementById('tela_cardapio').classList.add('hidden');
+    document.getElementById('tela_carrinho').classList.remove('hidden');
+    atualizarResumo();
+}
+
+function voltarCardapio() {
+    document.getElementById('tela_carrinho').classList.add('hidden');
+    document.getElementById('tela_pix').classList.add('hidden');
+    document.getElementById('tela_cardapio').classList.remove('hidden');
+}
+
+function abrirTelaPix() {
+    document.getElementById('chave_pix_mostrar').textContent = usuarioLogado?.chavePix || "Cadastre sua chave Pix";
+    document.getElementById('nome_pix_mostrar').textContent = usuarioLogado?.nomePix || "Cadastre o nome da conta";
+    document.getElementById('tela_carrinho').classList.add('hidden');
+    document.getElementById('tela_pix').classList.remove('hidden');
+}
+
+function copiarChavePix() {
+    const chave = document.getElementById('chave_pix_mostrar').textContent;
+    navigator.clipboard.writeText(chave);
+    alert('Chave Pix copiada!');
+}
+
+// === CARREGAR CARDÁPIO PELO LINK ===
+window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const modo = params.get('modo');
+
+    if(id && modo === 'cliente') {
+        const usuario = encontrarUsuarioPorId(id);
+        if(usuario) {
+            usuarioLogado = usuario;
+            carregarCardapioCliente(usuario);
+        }
+    }
+};
 
 function encontrarUsuarioPorId(id) {
     const chaves = Object.keys(localStorage);
@@ -730,9 +666,9 @@ function encontrarUsuarioPorId(id) {
 
 function carregarCardapioCliente(usuario) {
     document.getElementById('banner_cliente').src = usuario.banner;
-    document.getElementById('chave_pix_mostrar').textContent = usuario.chavePix || "Não cadastrada";
-    document.getElementById('nome_pix_mostrar').textContent = usuario.nomePix || "Não informado";
     mostrarAba('cardapio_cliente');
 }
+</script>
 
-function adicionarAoCarrinho(nome, pre
+</body>
+</html>
