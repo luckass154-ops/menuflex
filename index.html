@@ -11,16 +11,19 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#7B2FFE',
-                        primaryLight: '#9D29FF',
-                        accent: '#FF9500',
-                        accentDark: '#E67E00',
+                        primary: '#9333EA',
+                        primaryLight: '#A855F7',
+                        primaryDark: '#7E22CE',
+                        accent: '#F97316',
                         success: '#22C55E',
-                        dark: '#0A0A0F',
-                        graySoft: '#12121F',
-                        grayMid: '#222233',
-                        textMain: '#F8F8FF',
-                        textMuted: '#B0B0C8'
+                        warning: '#FBBF24',
+                        danger: '#EF4444',
+                        bgMain: '#FFFFFF',
+                        bgLight: '#F9FAFB',
+                        bgCard: '#FFFFFF',
+                        textMain: '#111827',
+                        textMuted: '#6B7280',
+                        borderColor: '#E5E7EB'
                     },
                     fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
                 }
@@ -29,38 +32,46 @@
     </script>
     <style type="text/tailwindcss">
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000000; min-height: 100vh; color: #F8F8FF; }
+        body { background: #F9FAFB; min-height: 100vh; color: #111827; }
         .aba { display: none; }
         .aba.ativa { display: block; }
         .secao { display: none; }
         .secao.ativa { display: block; }
-        .card { background: #12121F; border: 1px solid #222233; border-radius: 12px; }
-        .btn-primary { background: #7B2FFE; color: white; border-radius: 8px; }
-        .btn-primary:hover { background: #9D29FF; }
-        .btn-accent { background: #FF9500; color: #000; border-radius: 8px; font-weight: 500; }
-        .btn-accent:hover { background: #FFAA33; }
-        .input-field { background: #0A0A0F; border: 1px solid #222233; border-radius: 8px; padding: 10px 12px; width: 100%; color: #F8F8FF; }
-        .input-field:focus { outline: none; border-color: #7B2FFE; box-shadow: 0 0 0 2px rgba(123, 47, 254, 0.15); }
-        .cliente-container { max-width: 480px; margin: 0 auto; background: #000; min-height: 100vh; }
-        .tela-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 50; display: none; align-items: center; justify-content: center; padding: 16px; }
+        .card { background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .btn-primary { background: #9333EA; color: white; border-radius: 8px; }
+        .btn-primary:hover { background: #7E22CE; }
+        .btn-accent { background: #F97316; color: white; border-radius: 8px; }
+        .btn-accent:hover { background: #EA580C; }
+        .input-field { background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 8px; padding: 10px 12px; width: 100%; }
+        .input-field:focus { outline: none; border-color: #9333EA; box-shadow: 0 0 0 2px rgba(147,51,234,0.15); }
+        .cliente-container { max-width: 480px; margin: 0 auto; background: #FFFFFF; min-height: 100vh; }
+        .tela-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; display: none; align-items: center; justify-content: center; padding: 16px; }
         .tela-modal.ativa { display: flex; }
-        .modal-conteudo { background: #12121F; border-radius: 12px; width: 100%; max-width: 420px; padding: 24px; border: 1px solid #222233; }
-        .opcao-entrega { border: 2px solid #222233; border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .opcao-entrega.selecionada { border-color: #7B2FFE; background: rgba(123, 47, 254, 0.1); }
+        .modal-conteudo { background: #FFFFFF; border-radius: 12px; width: 100%; max-width: 420px; padding: 24px; border: 1px solid #E5E7EB; }
+        .opcao-entrega { border: 2px solid #E5E7EB; border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .opcao-entrega.selecionada { border-color: #9333EA; background: rgba(147,51,234,0.08); }
+        .opcao-pagamento { border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .opcao-pagamento.selecionada { border-color: #9333EA; background: rgba(147,51,234,0.05); }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background: #D1D5DB; border-radius: 24px; transition: 0.2s; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.2s; }
+        input:checked + .slider { background: #9333EA; }
+        input:checked + .slider:before { transform: translateX(20px); }
     </style>
 </head>
 <body class="font-sans">
 
 <!-- TELA INICIAL -->
 <section id="inicio" class="aba ativa flex flex-col items-center justify-center min-h-screen px-6 text-center">
-    <div class="w-20 h-20 bg-gradient-to-br from-primary to-primaryLight rounded-xl flex items-center justify-center mb-6">
-        <i class="fa fa-cutlery text-white text-3xl"></i>
+    <div class="w-20 h-20 bg-accent rounded-xl flex items-center justify-center mb-6">
+        <i class="fa fa-shopping-cart text-white text-3xl"></i>
     </div>
     <h1 class="text-3xl font-bold mb-3">Bem-vindo ao MenuFlex!</h1>
-    <p class="text-textMuted mb-10">Seu Cardápio Digital<br>Do seu jeito</p>
+    <p class="text-textMuted mb-10">Seu Cardápio Digital<br>Receba pedidos direto no WhatsApp</p>
     <button onclick="mostrarAba('cadastro')" class="w-full max-w-sm btn-accent py-4 rounded-xl text-lg font-semibold mb-6 flex flex-col items-center justify-center gap-1">
         <span>Cadastrar Minha Loja</span>
-        <span class="text-sm opacity-80">Crie grátis e comece a vender agora</span>
+        <span class="text-sm opacity-90">Crie grátis e comece a vender agora</span>
     </button>
     <a href="#" onclick="mostrarAba('login')" class="text-accent font-medium">Já tenho uma conta</a>
 </section>
@@ -79,7 +90,7 @@
         </div>
         <button onclick="fazerLogin()" class="w-full btn-primary py-3 rounded-lg font-semibold mt-2">Entrar</button>
     </div>
-    <p class="text-center mt-6 text-sm text-textMuted">Não tem conta? <a href="#" onclick="mostrarAba('cadastro')" class="text-accent font-medium">Cadastre-se grátis</a></p>
+    <p class="text-center mt-6 text-sm text-textMuted">Não tem conta? <a href="#" onclick="mostrarAba('cadastro')" class="text-primary font-medium">Cadastre-se grátis</a></p>
 </section>
 
 <!-- CADASTRO -->
@@ -121,51 +132,57 @@
 <!-- PAINEL ADMINISTRATIVO -->
 <section id="painel" class="aba">
     <div class="flex flex-col md:flex-row min-h-screen">
-        <!-- Menu Lateral -->
-        <aside class="w-full md:w-64 bg-graySoft border-b md:border-r border-grayMid p-4">
+        <!-- Menu Inferior Mobile / Lateral Desktop -->
+        <aside class="w-full md:w-64 bg-white border-b md:border-r border-borderColor p-4">
             <div class="flex items-center gap-3 mb-8">
                 <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                    <span class="font-bold text-xl">MF</span>
+                    <span class="font-bold text-white text-lg">MF</span>
                 </div>
                 <div>
                     <h3 class="font-bold text-lg">MenuFlex</h3>
                     <p class="text-xs text-textMuted" id="nome_loja_painel">---</p>
                 </div>
             </div>
-            <nav class="space-y-2">
-                <button onclick="mostrarSecao('dashboard')" class="w-full flex items-center gap-3 p-3 rounded-lg bg-primary/15 text-primary">
+            <nav class="space-y-1">
+                <button onclick="mostrarSecao('dashboard')" class="w-full flex items-center gap-3 p-3 rounded-lg bg-primary/10 text-primary font-medium">
                     <i class="fa fa-th-large"></i> Dashboard
                 </button>
-                <button onclick="mostrarSecao('pedidos')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-grayMid">
+                <button onclick="mostrarSecao('pedidos')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100">
                     <i class="fa fa-clipboard-list"></i> Pedidos
                 </button>
-                <button onclick="mostrarSecao('produtos')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-grayMid">
+                <button onclick="mostrarSecao('produtos')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100">
                     <i class="fa fa-box"></i> Produtos
                 </button>
-                <button onclick="mostrarSecao('configuracoes')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-grayMid">
-                    <i class="fa fa-cog"></i> Configurações
+                <button onclick="abrirMaisOpcoes()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100">
+                    <i class="fa fa-ellipsis-h"></i> Mais opções
                 </button>
-                <button onclick="sairConta()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-900/20 text-red-400 mt-6">
+                <button onclick="sairConta()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 text-red-600 mt-6">
                     <i class="fa fa-sign-out"></i> Sair
                 </button>
             </nav>
         </aside>
 
         <!-- Conteúdo Principal -->
-        <main class="flex-1 p-4 md:p-6 bg-dark">
+        <main class="flex-1 p-4 md:p-6 bg-gray-50">
             <div id="dashboard" class="secao ativa">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Painel</h2>
+                    <h2 class="text-2xl font-bold">Dashboard</h2>
                 </div>
 
                 <div class="card p-4 mb-6">
-                    <label class="text-sm text-textMuted mb-2 block">Link da sua loja:</label>
-                    <div class="flex gap-2 items-center">
-                        <input type="text" id="link_loja" class="input-field bg-dark" readonly>
-                        <button onclick="copiarCampo('link_loja')" class="btn-primary px-3 py-2 rounded">
+                    <label class="text-sm text-textMuted mb-2 block">Link da Loja:</label>
+                    <div class="flex gap-2 items-center flex-wrap">
+                        <input type="text" id="link_loja" class="input-field bg-gray-50 flex-1 min-w-[200px]" readonly>
+                        <button onclick="copiarCampo('link_loja')" class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="Copiar">
                             <i class="fa fa-copy"></i>
                         </button>
-                        <button onclick="compartilharLink()" class="btn-primary px-3 py-2 rounded">
+                        <button onclick="compartilharLink()" class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="Compartilhar">
+                            <i class="fa fa-share-alt"></i>
+                        </button>
+                        <button class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="QR Code">
+                            <i class="fa fa-qrcode"></i>
+                        </button>
+                        <button onclick="abrirWhatsApp()" class="p-2 rounded border border-gray-200 hover:bg-gray-100 text-green-600" title="WhatsApp">
                             <i class="fa fa-whatsapp"></i>
                         </button>
                     </div>
@@ -173,27 +190,55 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="card p-5">
-                        <p class="text-textMuted text-sm">Pedidos Hoje</p>
-                        <h3 class="text-3xl font-bold mt-2">0</h3>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-primary">
+                                <i class="fa fa-envelope"></i>
+                            </div>
+                            <div>
+                                <p class="text-textMuted text-sm">Pedidos Hoje</p>
+                                <h3 class="text-3xl font-bold mt-1">0</h3>
+                            </div>
+                        </div>
                     </div>
                     <div class="card p-5">
-                        <p class="text-textMuted text-sm">Pedidos Pendentes</p>
-                        <h3 class="text-3xl font-bold mt-2">0</h3>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                            <div>
+                                <p class="text-textMuted text-sm">Pedidos Pendentes</p>
+                                <h3 class="text-3xl font-bold mt-1">0</h3>
+                            </div>
+                        </div>
                     </div>
                     <div class="card p-5">
-                        <p class="text-textMuted text-sm">Faturamento Hoje</p>
-                        <h3 class="text-3xl font-bold mt-2">R$ 0,00</h3>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                <i class="fa fa-line-chart"></i>
+                            </div>
+                            <div>
+                                <p class="text-textMuted text-sm">Faturamento Hoje</p>
+                                <h3 class="text-3xl font-bold mt-1">R$ 0,00</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card p-5">
+                <div class="card p-5 mb-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-semibold text-lg">Pedidos Recentes</h3>
-                        <a href="#" onclick="mostrarSecao('pedidos')" class="text-accent text-sm">Ver todos</a>
+                        <a href="#" onclick="mostrarSecao('pedidos')" class="text-primary text-sm font-medium">Ver todos</a>
                     </div>
                     <div class="text-center py-10 text-textMuted">
                         <i class="fa fa-shopping-bag text-4xl mb-3 opacity-30"></i>
                         <p>Nenhum pedido recente</p>
+                    </div>
+                </div>
+
+                <div class="card p-5">
+                    <h3 class="font-semibold text-lg mb-4">Receita dos Últimos 7 Dias</h3>
+                    <div class="text-center py-8 text-textMuted">
+                        <p>Sem dados para exibir</p>
                     </div>
                 </div>
             </div>
@@ -201,54 +246,45 @@
             <div id="pedidos" class="secao">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Pedidos</h2>
-                    <button class="btn-primary px-4 py-2 rounded">+ Novo Pedido</button>
+                    <button class="btn-primary px-4 py-2 rounded flex items-center gap-2">
+                        <i class="fa fa-plus"></i> Pedido
+                    </button>
                 </div>
-                <div class="flex gap-2 mb-6">
-                    <button class="btn-primary px-4 py-1 rounded">Todos</button>
-                    <button class="bg-grayMid px-4 py-1 rounded hover:bg-gray-700">Novos</button>
-                    <button class="bg-grayMid px-4 py-1 rounded hover:bg-gray-700">Confirmados</button>
-                    <button class="bg-grayMid px-4 py-1 rounded hover:bg-gray-700">Entregues</button>
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button class="px-4 py-2 rounded-lg bg-primary text-white font-medium">Todos</button>
+                    <button class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Encomendas</button>
+                    <button class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Novos</button>
+                    <button class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Confirmados</button>
+                    <button class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Entregues</button>
                 </div>
                 <div class="card p-8 text-center text-textMuted">
                     <i class="fa fa-shopping-bag text-5xl mb-4 opacity-30"></i>
-                    <h3 class="text-xl font-medium mb-2">Nenhum pedido recebido ainda</h3>
-                    <p class="mb-6">Compartilhe o link da sua loja para começar a receber pedidos diretamente no WhatsApp.</p>
-                    <button onclick="compartilharLink()" class="btn-primary px-6 py-3 rounded-lg">
-                        <i class="fa fa-whatsapp mr-2"></i> Compartilhar Link
+                    <h3 class="text-xl font-medium mb-2">Você ainda não recebeu pedidos</h3>
+                    <p class="mb-6">Compartilhe o link da sua loja no WhatsApp pra começar a vender. Quando entrar pedido, aparece aqui em tempo real.</p>
+                    <button onclick="compartilharLink()" class="btn-primary px-6 py-3 rounded-lg flex items-center gap-2 mx-auto">
+                        <i class="fa fa-whatsapp"></i> Compartilhar no WhatsApp
                     </button>
                 </div>
             </div>
 
             <div id="produtos" class="secao">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Meus Produtos</h2>
-                    <button onclick="abrirModalProduto()" class="btn-primary px-4 py-2 rounded">+ Adicionar Produto</button>
+                    <h2 class="text-2xl font-bold">Produtos</h2>
+                    <button onclick="abrirModalProduto()" class="btn-primary px-4 py-2 rounded flex items-center gap-2">
+                        <i class="fa fa-plus"></i> Produto
+                    </button>
                 </div>
+                <p class="text-textMuted mb-4">Gerencie sua loja, estoque e preços.</p>
                 <div class="card p-5">
-                    <div class="mb-4">
-                        <input type="text" placeholder="Buscar produtos..." class="input-field">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <input type="text" placeholder="Buscar produtos..." class="input-field flex-1 min-w-[200px]">
+                        <button class="px-3 py-2 rounded border border-gray-200 hover:bg-gray-100 flex items-center gap-1">
+                            <i class="fa fa-sort"></i> Ordenar
+                        </button>
                     </div>
                     <div id="lista_produtos" class="space-y-4">
                         <!-- Produtos carregados aqui -->
                     </div>
-                </div>
-            </div>
-
-            <div id="configuracoes" class="secao">
-                <h2 class="text-2xl font-bold mb-6">Configurações da Loja</h2>
-                <div class="card p-5 space-y-3">
-                    <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-grayMid text-left">
-                        <i class="fa fa-money text-textMuted"></i> Dados de Pagamento
-                    </button>
-                    <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-grayMid text-left">
-                        <i class="fa fa-truck text-textMuted"></i> Taxas de Entrega
-                    </button>
-                    <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-grayMid text-left">
-                        <i class="fa fa-user text-textMuted"></i> Meus Dados
-                    </button>
-                    <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-grayMid text-left">
-                        <i class="fa fa-lock text-textMuted"></i> Alterar Senha
-                    </button>
                 </div>
             </div>
         </main>
@@ -258,9 +294,12 @@
 <!-- ÁREA DO CLIENTE -->
 <section id="cardapio_cliente" class="aba">
     <div class="cliente-container">
-        <header class="p-4 border-b border-grayMid flex justify-between items-center">
-            <h1 class="text-xl font-bold" id="nome_loja_cliente">---</h1>
-            <div class="flex gap-3">
+        <header class="p-4 border-b border-borderColor flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold" id="nome_loja_cliente">---</h1>
+                <p class="text-xs text-textMuted">Loja Digital</p>
+            </div>
+            <div class="flex gap-4">
                 <i class="fa fa-search text-xl text-textMuted"></i>
                 <i class="fa fa-shopping-cart text-xl text-textMuted"></i>
             </div>
@@ -276,15 +315,68 @@
                 <!-- Produtos aqui -->
             </div>
 
-            <div class="text-center mt-10 text-textMuted text-sm">
-                Seu Cardápio Digital<br>
-                <span class="text-accent font-medium">MenuFlex - Do seu jeito</span>
+            <div class="text-center mt-10 text-textMuted text-sm pb-8">
+                Quer criar uma loja igual a esta?<br>
+                <a href="https://wa.me/558699850573" class="text-primary font-medium">Clique aqui 📞 (86) 9 2104-8695</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- MODAL DO PEDIDO -->
+<!-- MODAL MAIS OPÇÕES -->
+<div id="modal_mais_opcoes" class="tela-modal">
+    <div class="modal-conteudo max-w-xs">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg">Mais opções</h3>
+            <button onclick="fecharMaisOpcoes()" class="text-textMuted text-xl">&times;</button>
+        </div>
+        <div class="space-y-2">
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-left">
+                <i class="fa fa-file-text-o text-textMuted"></i> Financeiro
+            </button>
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-left">
+                <i class="fa fa-calculator text-textMuted"></i> PDV
+            </button>
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-left">
+                <i class="fa fa-users text-textMuted"></i> Clientes
+            </button>
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-left">
+                <i class="fa fa-cog text-textMuted"></i> Configurações
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PRODUTO -->
+<div id="modal_produto" class="tela-modal">
+    <div class="modal-conteudo">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg">Adicionar Produto</h3>
+            <button onclick="fecharModalProduto()" class="text-textMuted text-xl">&times;</button>
+        </div>
+        <div class="space-y-3">
+            <div>
+                <label class="block text-sm mb-1">Nome do produto</label>
+                <input type="text" id="prod_nome" class="input-field" required>
+            </div>
+            <div>
+                <label class="block text-sm mb-1">Preço (R$)</label>
+                <input type="number" step="0.01" min="0" id="prod_preco" class="input-field" required>
+            </div>
+            <div>
+                <label class="block text-sm mb-1">Descrição</label>
+                <input type="text" id="prod_desc" class="input-field">
+            </div>
+            <div>
+                <label class="block text-sm mb-1">Imagem (URL)</label>
+                <input type="text" id="prod_imagem" class="input-field" placeholder="Link da imagem">
+            </div>
+        </div>
+        <button onclick="salvarProduto()" class="w-full btn-primary py-3 rounded-lg font-semibold mt-6">Salvar Produto</button>
+    </div>
+</div>
+
+<!-- MODAL PEDIDO -->
 <div id="modal_pedido" class="tela-modal">
     <div class="modal-conteudo">
         <div class="flex justify-between items-center mb-4">
@@ -292,12 +384,39 @@
             <button onclick="fecharModalPedido()" class="text-textMuted text-xl">&times;</button>
         </div>
         <div id="item_pedido_modal" class="mb-4"></div>
-        <div class="flex items-center justify-center gap-4 mb-6">
-            <button onclick="alterarQuantidade(-1)" class="w-10 h-10 rounded-full bg-grayMid flex items-center justify-center text-xl">-</button>
+        <div class="flex items-center justify-center gap-4 mb-4">
+            <button onclick="alterarQuantidade(-1)" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-xl">-</button>
             <span id="qtd_item" class="text-xl font-medium">1</span>
-            <button onclick="alterarQuantidade(1)" class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-xl">+</button>
+            <button onclick="alterarQuantidade(1)" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-xl">+</button>
         </div>
-        <button onclick="abrirFinalizar()" class="w-full btn-primary py-3 rounded-lg font-semibold">Finalizar Pedido</button>
+        <div class="mb-6">
+            <input type="text" id="observacao" class="input-field" placeholder="Adicionar observação">
+        </div>
+        <button onclick="abrirDadosCliente()" class="w-full btn-primary py-3 rounded-lg font-semibold">Finalizar Pedido</button>
+    </div>
+</div>
+
+<!-- MODAL DADOS CLIENTE -->
+<div id="modal_dados_cliente" class="tela-modal">
+    <div class="modal-conteudo">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg">Entrar com WhatsApp</h3>
+            <button onclick="fecharDadosCliente()" class="text-textMuted text-xl">&times;</button>
+        </div>
+        <p class="text-sm text-textMuted mb-4">Confirmamos sua identidade pelo número de WhatsApp. Não enviamos código, só validamos se o número existe.</p>
+        <div class="mb-3">
+            <label class="block text-sm mb-1">WhatsApp</label>
+            <div class="flex gap-2 items-center">
+                <span class="text-sm text-textMuted">+55</span>
+                <input type="text" id="cliente_whatsapp" class="input-field" placeholder="(86) 99985-0573" required>
+            </div>
+        </div>
+        <div class="mb-6">
+            <label class="block text-sm mb-1">Como podemos te chamar?</label>
+            <input type="text" id="cliente_nome" class="input-field" placeholder="Seu nome" required>
+        </div>
+        <button onclick="avancarParaEntrega()" class="w-full btn-primary py-3 rounded-lg font-semibold">Continuar</button>
+        <p class="text-xs text-textMuted mt-3 text-center">Ao continuar você confirma que este WhatsApp é seu.</p>
     </div>
 </div>
 
@@ -321,17 +440,41 @@
         </div>
 
         <div id="campos_entrega" class="mb-6">
-            <p class="text-sm text-red-400 mb-2">Preencha o endereço de entrega para continuar.</p>
+            <p class="text-sm text-red-500 mb-2">Preencha o endereço de entrega para continuar.</p>
             <input type="text" id="rua" placeholder="Rua" class="input-field mb-2">
             <div class="flex gap-2 mb-2">
-                <input type="text" id="numero" placeholder="Número" class="input-field">
+                <input type="text" id="numero" placeholder="N°" class="input-field">
                 <input type="text" id="bairro" placeholder="Bairro" class="input-field">
             </div>
-            <input type="text" id="complemento" placeholder="Complemento / Referência" class="input-field mb-2">
+            <input type="text" id="complemento" placeholder="Complemento" class="input-field mb-2">
             <input type="text" id="cep" placeholder="CEP" class="input-field mb-4">
+            <button class="w-full border border-gray-200 rounded-lg p-2 text-sm text-textMuted flex items-center justify-center gap-2 mb-4">
+                <i class="fa fa-map-marker"></i> Digitar endereço manualmente
+            </button>
         </div>
 
-        <div class="border-t border-b border-grayMid py-4 mb-4">
+        <div class="mb-6">
+            <h4 class="font-semibold mb-3">Forma de Pagamento</h4>
+            <div class="opcao-pagamento" onclick="selecionarPagamento('dinheiro')">
+                <input type="radio" name="pagamento" id="pag_dinheiro">
+                <label for="pag_dinheiro">Dinheiro</label>
+            </div>
+            <div class="opcao-pagamento" onclick="selecionarPagamento('pix')">
+                <input type="radio" name="pagamento" id="pag_pix">
+                <label for="pag_pix">Pix</label>
+            </div>
+            <div class="opcao-pagamento" onclick="selecionarPagamento('debito')">
+                <input type="radio" name="pagamento" id="pag_debito">
+                <label for="pag_debito">Débito</label>
+            </div>
+            <div class="opcao-pagamento" onclick="selecionarPagamento('credito')">
+                <input type="radio" name="pagamento" id="pag_credito">
+                <label for="pag_credito">Crédito</label>
+            </div>
+            <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded mt-3">O frete será calculado e informado após o envio do pedido.</p>
+        </div>
+
+        <div class="border-t border-b border-borderColor py-4 mb-4">
             <div class="flex justify-between text-sm mb-2">
                 <span>Subtotal:</span>
                 <span id="subtotal_final">R$ 0,00</span>
@@ -342,7 +485,7 @@
             </div>
             <div class="flex justify-between text-lg font-bold mt-3">
                 <span>Total parcial:</span>
-                <span id="total_final" class="text-accent">R$ 0,00</span>
+                <span id="total_final" class="text-primary">R$ 0,00</span>
             </div>
         </div>
 
@@ -357,6 +500,8 @@ let usuarioLogado = null;
 let produtoAtual = null;
 let quantidadeAtual = 1;
 let modalidade = 'entrega';
+let formaPagamento = 'pix';
+let dadosCliente = {};
 let baseUrl = window.location.origin + window.location.pathname;
 
 function mostrarAba(nome) {
@@ -384,12 +529,12 @@ function salvarCadastro() {
         id: Date.now(),
         loja, nome, whatsapp, email, senha, chavePix, nomePix,
         produtos: [
-            {id:1, nome:"Duplo Especial", preco:17.99, desc:"Hambúrguer com queijo, bacon e molho especial", ativo:true}
+            {id:1, nome:"Duplo Especial", preco:17.99, desc:"", imagem:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=150", ativo:true}
         ]
     };
 
     localStorage.setItem('usuario_'+email, JSON.stringify(usuario));
-    alert('Cadastro realizado com sucesso! Faça login para acessar sua loja.');
+    alert('Cadastro realizado com sucesso! Faça login para acessar.');
     mostrarAba('login');
 }
 
@@ -405,7 +550,7 @@ function fazerLogin() {
         }
     });
 
-    if(!dados) return alert('Conta não encontrada! Verifique e-mail ou WhatsApp.');
+    if(!dados) return alert('Conta não encontrada!');
     if(dados.senha !== senha) return alert('Senha incorreta!');
 
     usuarioLogado = dados;
@@ -424,35 +569,71 @@ function carregarListaProdutos() {
     lista.innerHTML = '';
     usuarioLogado.produtos.forEach(prod => {
         lista.innerHTML += `
-        <div class="flex justify-between items-center p-3 border border-grayMid rounded-lg">
-            <div>
-                <h4 class="font-medium">${prod.nome}</h4>
-                <p class="text-sm text-textMuted">R$ ${prod.preco.toFixed(2).replace('.', ',')}</p>
+        <div class="flex justify-between items-center p-3 border border-borderColor rounded-lg">
+            <div class="flex items-center gap-3">
+                <img src="${prod.imagem || 'https://via.placeholder.com/50'}" alt="${prod.nome}" class="w-12 h-12 rounded object-cover">
+                <div>
+                    <h4 class="font-medium">${prod.nome}</h4>
+                    <p class="text-sm text-textMuted">Sem categoria • R$ ${prod.preco.toFixed(2).replace('.', ',')}</p>
+                </div>
             </div>
             <div class="flex gap-3 items-center">
+                <label class="switch">
+                    <input type="checkbox" ${prod.ativo ? 'checked' : ''} onchange="alterarStatus(${prod.id}, this.checked)">
+                    <span class="slider"></span>
+                </label>
                 <button class="text-primary hover:text-primaryLight"><i class="fa fa-pencil"></i></button>
-                <button class="text-red-400 hover:text-red-300"><i class="fa fa-trash"></i></button>
+                <button class="text-red-500 hover:text-red-600" onclick="excluirProduto(${prod.id})"><i class="fa fa-trash"></i></button>
             </div>
         </div>`;
     });
 }
 
+function abrirMaisOpcoes() {
+    document.getElementById('modal_mais_opcoes').classList.add('ativa');
+}
+function fecharMaisOpcoes() {
+    document.getElementById('modal_mais_opcoes').classList.remove('ativa');
+}
+
 function abrirModalProduto() {
-    const nome = prompt('Nome do produto:');
-    const preco = parseFloat(prompt('Preço (ex: 19.90):'));
-    if(!nome || !preco || isNaN(preco)) return alert('Dados inválidos!');
-    
+    document.getElementById('modal_produto').classList.add('ativa');
+}
+function fecharModalProduto() {
+    document.getElementById('modal_produto').classList.remove('ativa');
+}
+
+function salvarProduto() {
+    const nome = document.getElementById('prod_nome').value.trim();
+    const preco = parseFloat(document.getElementById('prod_preco').value);
+    const desc = document.getElementById('prod_desc').value.trim();
+    const imagem = document.getElementById('prod_imagem').value.trim() || 'https://via.placeholder.com/150';
+
+    if(!nome || !preco || isNaN(preco) || preco <= 0) return alert('Preencha nome e preço corretamente!');
+
     usuarioLogado.produtos.push({
         id: Date.now(),
-        nome: nome,
-        preco: preco,
-        desc: '',
-        ativo: true
+        nome, preco, desc, imagem, ativo: true
     });
     localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
     carregarListaProdutos();
-    carregarCardapioCliente(usuarioLogado);
+    fecharModalProduto();
     alert('Produto adicionado!');
+}
+
+function alterarStatus(id, status) {
+    const prod = usuarioLogado.produtos.find(p => p.id === id);
+    if(prod) {
+        prod.ativo = status;
+        localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
+    }
+}
+
+function excluirProduto(id) {
+    if(!confirm('Deseja excluir este produto?')) return;
+    usuarioLogado.produtos = usuarioLogado.produtos.filter(p => p.id !== id);
+    localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
+    carregarListaProdutos();
 }
 
 function copiarCampo(id) {
@@ -460,12 +641,16 @@ function copiarCampo(id) {
     campo.select();
     campo.setSelectionRange(0, 99999);
     navigator.clipboard.writeText(campo.value);
-    alert('Link copiado para a área de transferência!');
+    alert('Link copiado!');
 }
 
 function compartilharLink() {
     const link = document.getElementById('link_loja').value;
-    window.open(`https://wa.me/?text=${encodeURIComponent('Acesse meu cardápio digital: ' + link)}`, '_blank');
+    window.open(`https://wa.me/?text=${encodeURIComponent('Acesse meu cardápio: ' + link)}`, '_blank');
+}
+
+function abrirWhatsApp() {
+    window.open(`https://wa.me/55${usuarioLogado.whatsapp}`, '_blank');
 }
 
 function sairConta() {
@@ -478,8 +663,11 @@ function abrirModalPedido(produto) {
     quantidadeAtual = 1;
     document.getElementById('item_pedido_modal').innerHTML = `
         <div class="flex justify-between items-center">
-            <h4 class="font-bold text-lg">${produto.nome}</h4>
-            <span class="text-accent font-semibold">R$ ${produto.preco.toFixed(2).replace('.', ',')}</span>
+            <div class="flex items-center gap-3">
+                <img src="${produto.imagem}" alt="${produto.nome}" class="w-12 h-12 rounded object-cover">
+                <h4 class="font-bold text-lg">${produto.nome}</h4>
+            </div>
+            <span class="font-semibold">R$ ${produto.preco.toFixed(2).replace('.', ',')}</span>
         </div>`;
     document.getElementById('qtd_item').textContent = quantidadeAtual;
     document.getElementById('modal_pedido').classList.add('ativa');
@@ -494,8 +682,25 @@ function alterarQuantidade(valor) {
     document.getElementById('qtd_item').textContent = quantidadeAtual;
 }
 
-function abrirFinalizar() {
+function abrirDadosCliente() {
     fecharModalPedido();
+    document.getElementById('modal_dados_cliente').classList.add('ativa');
+}
+
+function fecharDadosCliente() {
+    document.getElementById('modal_dados_cliente').classList.remove('ativa');
+}
+
+function avancarParaEntrega() {
+    const nome = document.getElementById('cliente_nome').value.trim();
+    const whatsapp = document.getElementById('cliente_whatsapp').value.trim();
+    if(!nome || !whatsapp) return alert('Preencha nome e WhatsApp!');
+    dadosCliente = { nome, whatsapp };
+    fecharDadosCliente();
+    abrirFinalizar();
+}
+
+function abrirFinalizar() {
     const subtotal = (produtoAtual.preco * quantidadeAtual);
     document.getElementById('subtotal_final').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
     document.getElementById('total_final').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
@@ -513,22 +718,32 @@ function selecionarModalidade(tipo) {
     document.getElementById('campos_entrega').style.display = tipo === 'entrega' ? 'block' : 'none';
 }
 
+function selecionarPagamento(tipo) {
+    formaPagamento = tipo;
+    document.querySelectorAll('.opcao-pagamento').forEach(el => el.classList.remove('selecionada'));
+    event.currentTarget.classList.add('selecionada');
+    event.currentTarget.querySelector('input').checked = true;
+}
+
 function gerarCodigoPedido() {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
 function enviarPedidoWhatsApp() {
     const codigo = gerarCodigoPedido();
+    const observacao = document.getElementById('observacao').value.trim();
     const endereco = modalidade === 'entrega' ? 
         `${document.getElementById('rua').value.trim()}, ${document.getElementById('numero').value.trim()} - ${document.getElementById('complemento').value.trim()} - ${document.getElementById('bairro').value.trim()} - CEP: ${document.getElementById('cep').value.trim()}` 
         : 'Retirada na loja';
 
     let mensagem = `*Novo Pedido #${codigo}*\n\n`;
-    mensagem += `*Cliente:* ${document.getElementById('cad_nome')?.value || 'Cliente'}\n`;
+    mensagem += `*Cliente:* ${dadosCliente.nome}\n`;
+    mensagem += `*WhatsApp:* ${dadosCliente.whatsapp}\n`;
     mensagem += `*Modalidade:* ${modalidade.toUpperCase()}\n`;
     mensagem += `*Endereço:* ${endereco}\n\n`;
-    mensagem += `*Itens:*\n${quantidadeAtual}x ${produtoAtual.nome} - R$ ${(produtoAtual.preco * quantidadeAtual).toFixed(2).replace('.', ',')}\n\n`;
-    mensagem += `*Pagamento:* Pix\n`;
+    mensagem += `*Itens:*\n${quantidadeAtual}x ${produtoAtual.nome} - R$ ${(produtoAtual.preco * quantidadeAtual).toFixed(2).replace('.', ',')}\n`;
+    if(observacao) mensagem += `*Observação:* ${observacao}\n\n`;
+    mensagem += `*Pagamento:* ${formaPagamento.toUpperCase()}\n`;
     mensagem += `*Subtotal:* R$ ${(produtoAtual.preco * quantidadeAtual).toFixed(2).replace('.', ',')}\n`;
     mensagem += `*Frete:* calculado após pedido\n`;
     mensagem += `*Total parcial:* R$ ${(produtoAtual.preco * quantidadeAtual).toFixed(2).replace('.', ',')}\n`;
@@ -557,10 +772,13 @@ function carregarCardapioCliente(usuario) {
     lista.innerHTML = '';
     usuario.produtos.filter(p => p.ativo).forEach(prod => {
         lista.innerHTML += `
-        <div class="flex justify-between items-center p-3 border border-grayMid rounded-lg">
-            <div>
-                <h4 class="font-bold text-lg">${prod.nome}</h4>
-                <p class="text-accent font-semibold mt-1">R$ ${prod.preco.toFixed(2).replace('.', ',')}</p>
+        <div class="flex justify-between items-center p-3 border border-borderColor rounded-lg">
+            <div class="flex items-center gap-3">
+                <img src="${prod.imagem}" alt="${prod.nome}" class="w-16 h-16 rounded object-cover">
+                <div>
+                    <h4 class="font-bold text-lg">${prod.nome}</h4>
+                    <p class="text-primary font-semibold mt-1">R$ ${prod.preco.toFixed(2).replace('.', ',')}</p>
+                </div>
             </div>
             <button onclick='abrirModalPedido(${JSON.stringify(prod).replace(/"/g, "&quot;")})' class="btn-primary px-4 py-1 rounded">+ Adicionar</button>
         </div>`;
