@@ -802,4 +802,23 @@ function enviarPedidoWhatsApp() {
         itensTexto += `${i.qtd}x ${i.nome} - R$ ${valor.toFixed(2).replace('.',',')}\n`;
     });
 
-    const mensagem = `📝 NOVO PEDIDO #${numeroPedido}\n\n👤 Cliente: ${pedidoAtual.cliente.nome}\n📞 Contato: (${pedidoAtual.cliente.whatsapp.slice(0,2)}) ${pedidoAtual.cliente.whatsapp.slice(2)}\n🚚 Modalidade: ${pedidoAtual.modalidade}\n📍 Endereço: ${endereco}\n\n📦 Itens:\n${itensTexto}\n💳 Pagamento: ${pedidoAtual.pagamento || 'A combinar
+    const mensagem = `📝 NOVO PEDIDO #${numeroPedido}\n\n👤 Cliente: ${pedidoAtual.cliente.nome}\n📞 Contato: (${pedidoAtual.cliente.whatsapp.slice(0,2)}) ${pedidoAtual.cliente.whatsapp.slice(2)}\n🚚 Modalidade: ${pedidoAtual.modalidade}\n📍 Endereço: ${endereco}\n\n📦 Itens:\n${itensTexto}\n💳 Pagamento: ${pedidoAtual.pagamento || 'A combinar'}\n\n💵 Subtotal: R$ ${total.toFixed(2).replace('.',',')}\n🚚 Frete: a calcular após pedido\n✅ Total parcial: R$ ${total.toFixed(2).replace('.',',')}\n(Frete a calcular e somar após o pedido)`;
+
+    window.open(`https://wa.me/55${usuarioLogado.whatsapp}?text=${encodeURIComponent(mensagem)}`, '_blank');
+    alert('Pedido enviado com sucesso!');
+
+    // Resetar pedido
+    pedidoAtual = { itens: [] };
+    document.getElementById('modal_finalizar').classList.remove('ativa');
+    mostrarAba('cardapio_cliente');
+}
+
+function sairConta() {
+    usuarioLogado = null;
+    fecharMaisOpcoes();
+    mostrarAba('inicio');
+}
+</script>
+
+</body>
+</html>
