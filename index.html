@@ -29,6 +29,10 @@
                 }
             }
         }
+        // Seu número de contato
+        const NUMERO_ADMIN = '5586999850573';
+        let usuarioLogado = null;
+        let pedidoAtual = { itens: [] };
     </script>
     <style type="text/tailwindcss">
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -68,12 +72,15 @@
         <i class="fa fa-shopping-cart text-white text-3xl"></i>
     </div>
     <h1 class="text-3xl font-bold mb-3">Bem-vindo ao MenuFlex!</h1>
-    <p class="text-textMuted mb-10">Seu Cardápio Digital<br>Receba pedidos direto no WhatsApp</p>
+    <p class="text-textMuted mb-10">Seu Cardápio Digital<br>Do seu jeito</p>
     <button onclick="mostrarAba('cadastro')" class="w-full max-w-sm btn-accent py-4 rounded-xl text-lg font-semibold mb-6 flex flex-col items-center justify-center gap-1">
         <span>Cadastrar Minha Loja</span>
         <span class="text-sm opacity-90">Crie grátis e comece a vender agora</span>
     </button>
-    <a href="#" onclick="mostrarAba('login')" class="text-accent font-medium">Já tenho uma conta</a>
+    <div class="flex flex-col gap-2">
+        <a href="#" onclick="mostrarAba('login')" class="text-primary font-medium">Já tenho uma conta</a>
+        <a href="#" onclick="mostrarAba('recuperar_senha')" class="text-sm text-textMuted mt-2">Esqueci minha senha</a>
+    </div>
 </section>
 
 <!-- LOGIN -->
@@ -91,6 +98,21 @@
         <button onclick="fazerLogin()" class="w-full btn-primary py-3 rounded-lg font-semibold mt-2">Entrar</button>
     </div>
     <p class="text-center mt-6 text-sm text-textMuted">Não tem conta? <a href="#" onclick="mostrarAba('cadastro')" class="text-primary font-medium">Cadastre-se grátis</a></p>
+    <p class="text-center mt-2 text-sm text-textMuted"><a href="#" onclick="mostrarAba('recuperar_senha')" class="text-primary">Esqueci minha senha</a></p>
+</section>
+
+<!-- RECUPERAR SENHA -->
+<section id="recuperar_senha" class="aba max-w-md mx-auto p-6 mt-10">
+    <h2 class="text-2xl font-bold mb-6 text-center">Recuperar Senha</h2>
+    <p class="text-center text-textMuted mb-6">Informe seu e-mail ou WhatsApp que enviaremos os dados para o administrador</p>
+    <div class="space-y-4">
+        <div>
+            <label class="block text-sm mb-1 text-textMuted">E-mail ou WhatsApp cadastrado</label>
+            <input type="text" id="recuperar_contato" class="input-field" required>
+        </div>
+        <button onclick="solicitarRecuperacao()" class="w-full btn-primary py-3 rounded-lg font-semibold mt-2">Solicitar Recuperação</button>
+    </div>
+    <p class="text-center mt-6"><a href="#" onclick="mostrarAba('login')" class="text-primary font-medium">Voltar ao login</a></p>
 </section>
 
 <!-- CADASTRO -->
@@ -131,64 +153,47 @@
 
 <!-- PAINEL ADMINISTRATIVO -->
 <section id="painel" class="aba">
-    <div class="flex flex-col md:flex-row min-h-screen">
-        <!-- Menu Inferior Mobile / Lateral Desktop -->
-        <aside class="w-full md:w-64 bg-white border-b md:border-r border-borderColor p-4">
-            <div class="flex items-center gap-3 mb-8">
+    <div class="flex flex-col min-h-screen">
+        <!-- Cabeçalho -->
+        <header class="bg-white border-b border-borderColor p-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
                 <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                    <span class="font-bold text-white text-lg">MF</span>
+                    <span class="text-white font-bold">MF</span>
                 </div>
                 <div>
-                    <h3 class="font-bold text-lg">MenuFlex</h3>
-                    <p class="text-xs text-textMuted" id="nome_loja_painel">---</p>
+                    <h2 class="text-lg font-bold" id="nome_loja_painel">---</h2>
+                    <p class="text-xs text-textMuted">Loja Digital</p>
                 </div>
             </div>
-            <nav class="space-y-1">
-                <button onclick="mostrarSecao('dashboard')" class="w-full flex items-center gap-3 p-3 rounded-lg bg-primary/10 text-primary font-medium">
-                    <i class="fa fa-th-large"></i> Dashboard
+            <button class="text-xl text-textMuted">
+                <i class="fa fa-cog"></i>
+            </button>
+        </header>
+
+        <!-- Link da Loja -->
+        <div class="bg-white p-4 border-b border-borderColor">
+            <label class="block text-sm text-textMuted mb-2">Link da Loja:</label>
+            <div class="flex gap-2 items-center flex-wrap">
+                <input type="text" id="link_loja" class="input-field bg-gray-50 flex-1 min-w-[200px]" readonly>
+                <button onclick="copiarCampo('link_loja')" class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="Copiar">
+                    <i class="fa fa-copy"></i>
                 </button>
-                <button onclick="mostrarSecao('pedidos')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100">
-                    <i class="fa fa-clipboard-list"></i> Pedidos
+                <button onclick="compartilharLink()" class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="Compartilhar">
+                    <i class="fa fa-share-alt"></i>
                 </button>
-                <button onclick="mostrarSecao('produtos')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100">
-                    <i class="fa fa-box"></i> Produtos
+                <button class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="QR Code">
+                    <i class="fa fa-qrcode"></i>
                 </button>
-                <button onclick="abrirMaisOpcoes()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100">
-                    <i class="fa fa-ellipsis-h"></i> Mais opções
+                <button onclick="abrirWhatsApp()" class="p-2 rounded border border-gray-200 hover:bg-gray-100 text-green-600" title="WhatsApp">
+                    <i class="fa fa-whatsapp"></i>
                 </button>
-                <button onclick="sairConta()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 text-red-600 mt-6">
-                    <i class="fa fa-sign-out"></i> Sair
-                </button>
-            </nav>
-        </aside>
+            </div>
+        </div>
 
         <!-- Conteúdo Principal -->
-        <main class="flex-1 p-4 md:p-6 bg-gray-50">
+        <main class="flex-1 p-4 bg-gray-50">
             <div id="dashboard" class="secao ativa">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Dashboard</h2>
-                </div>
-
-                <div class="card p-4 mb-6">
-                    <label class="text-sm text-textMuted mb-2 block">Link da Loja:</label>
-                    <div class="flex gap-2 items-center flex-wrap">
-                        <input type="text" id="link_loja" class="input-field bg-gray-50 flex-1 min-w-[200px]" readonly>
-                        <button onclick="copiarCampo('link_loja')" class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="Copiar">
-                            <i class="fa fa-copy"></i>
-                        </button>
-                        <button onclick="compartilharLink()" class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="Compartilhar">
-                            <i class="fa fa-share-alt"></i>
-                        </button>
-                        <button class="p-2 rounded border border-gray-200 hover:bg-gray-100" title="QR Code">
-                            <i class="fa fa-qrcode"></i>
-                        </button>
-                        <button onclick="abrirWhatsApp()" class="p-2 rounded border border-gray-200 hover:bg-gray-100 text-green-600" title="WhatsApp">
-                            <i class="fa fa-whatsapp"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                     <div class="card p-5">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-primary">
@@ -211,7 +216,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card p-5">
+                    <div class="card p-5 md:col-span-1 col-span-2">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
                                 <i class="fa fa-line-chart"></i>
@@ -245,7 +250,9 @@
 
             <div id="pedidos" class="secao">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Pedidos</h2>
+                    <button class="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 flex items-center gap-1">
+                        <i class="fa fa-filter"></i> Filtros
+                    </button>
                     <button class="btn-primary px-4 py-2 rounded flex items-center gap-2">
                         <i class="fa fa-plus"></i> Pedido
                     </button>
@@ -268,19 +275,20 @@
             </div>
 
             <div id="produtos" class="secao">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Produtos</h2>
+                <h2 class="text-2xl font-bold mb-1">Produtos</h2>
+                <p class="text-textMuted mb-4">Gerencie sua loja, estoque e preços.</p>
+                <div class="flex justify-between items-center mb-4">
+                    <button class="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 flex items-center gap-1">
+                        <i class="fa fa-sort"></i> Ordenar
+                    </button>
                     <button onclick="abrirModalProduto()" class="btn-primary px-4 py-2 rounded flex items-center gap-2">
                         <i class="fa fa-plus"></i> Produto
                     </button>
                 </div>
-                <p class="text-textMuted mb-4">Gerencie sua loja, estoque e preços.</p>
                 <div class="card p-5">
                     <div class="flex flex-wrap gap-2 mb-4">
                         <input type="text" placeholder="Buscar produtos..." class="input-field flex-1 min-w-[200px]">
-                        <button class="px-3 py-2 rounded border border-gray-200 hover:bg-gray-100 flex items-center gap-1">
-                            <i class="fa fa-sort"></i> Ordenar
-                        </button>
+                        <button class="px-4 py-1 rounded-full bg-primary text-white">Todas</button>
                     </div>
                     <div id="lista_produtos" class="space-y-4">
                         <!-- Produtos carregados aqui -->
@@ -288,6 +296,26 @@
                 </div>
             </div>
         </main>
+
+        <!-- Menu Inferior -->
+        <nav class="bg-white border-t border-borderColor p-2 flex justify-around">
+            <button onclick="mostrarSecao('dashboard')" class="flex flex-col items-center gap-1 text-primary">
+                <i class="fa fa-th-large text-xl"></i>
+                <span class="text-xs">Dashboard</span>
+            </button>
+            <button onclick="mostrarSecao('pedidos')" class="flex flex-col items-center gap-1 text-textMuted hover:text-primary">
+                <i class="fa fa-clipboard-list text-xl"></i>
+                <span class="text-xs">Pedidos</span>
+            </button>
+            <button onclick="mostrarSecao('produtos')" class="flex flex-col items-center gap-1 text-textMuted hover:text-primary">
+                <i class="fa fa-box text-xl"></i>
+                <span class="text-xs">Produtos</span>
+            </button>
+            <button onclick="abrirMaisOpcoes()" class="flex flex-col items-center gap-1 text-textMuted hover:text-primary">
+                <i class="fa fa-ellipsis-h text-xl"></i>
+                <span class="text-xs">Mais</span>
+            </button>
+        </nav>
     </div>
 </section>
 
@@ -317,7 +345,7 @@
 
             <div class="text-center mt-10 text-textMuted text-sm pb-8">
                 Quer criar uma loja igual a esta?<br>
-                <a href="https://wa.me/558699850573" class="text-primary font-medium">Clique aqui 📞 (86) 9 2104-8695</a>
+                <a href="https://wa.me/5586999850573" class="text-primary font-medium">Clique aqui 📞 (86) 9 99985-0573</a>
             </div>
         </div>
     </div>
@@ -343,6 +371,9 @@
             <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-left">
                 <i class="fa fa-cog text-textMuted"></i> Configurações
             </button>
+            <button onclick="sairConta()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 text-red-600 mt-4">
+                <i class="fa fa-sign-out"></i> Sair da conta
+            </button>
         </div>
     </div>
 </div>
@@ -364,12 +395,12 @@
                 <input type="number" step="0.01" min="0" id="prod_preco" class="input-field" required>
             </div>
             <div>
-                <label class="block text-sm mb-1">Descrição</label>
-                <input type="text" id="prod_desc" class="input-field">
+                <label class="block text-sm mb-1">Ingredientes / Descrição</label>
+                <textarea id="prod_desc" class="input-field" rows="2" placeholder="Ex: Pão, carne, queijo, bacon..."></textarea>
             </div>
             <div>
-                <label class="block text-sm mb-1">Imagem (URL)</label>
-                <input type="text" id="prod_imagem" class="input-field" placeholder="Link da imagem">
+                <label class="block text-sm mb-1">Imagem (URL da internet)</label>
+                <input type="text" id="prod_imagem" class="input-field" placeholder="Ex: https://endereco-da-imagem.com/foto.jpg">
             </div>
         </div>
         <button onclick="salvarProduto()" class="w-full btn-primary py-3 rounded-lg font-semibold mt-6">Salvar Produto</button>
@@ -378,423 +409,397 @@
 
 <!-- MODAL PEDIDO -->
 <div id="modal_pedido" class="tela-modal">
-    <div class="modal-conteudo">
+    <div class="modal-conteudo max-w-md">
         <div class="flex justify-between items-center mb-4">
             <h3 class="font-bold text-lg">Seu Pedido</h3>
             <button onclick="fecharModalPedido()" class="text-textMuted text-xl">&times;</button>
         </div>
-        <div id="item_pedido_modal" class="mb-4"></div>
-        <div class="flex items-center justify-center gap-4 mb-4">
-            <button onclick="alterarQuantidade(-1)" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-xl">-</button>
-            <span id="qtd_item" class="text-xl font-medium">1</span>
-            <button onclick="alterarQuantidade(1)" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-xl">+</button>
+        <div id="resumo_pedido" class="space-y-4 mb-6">
+            <!-- Itens do pedido -->
         </div>
-        <div class="mb-6">
-            <input type="text" id="observacao" class="input-field" placeholder="Adicionar observação">
+        <div class="flex justify-between items-center text-lg font-bold mb-6">
+            <span>Total</span>
+            <span id="valor_total">R$ 0,00</span>
         </div>
-        <button onclick="abrirDadosCliente()" class="w-full btn-primary py-3 rounded-lg font-semibold">Finalizar Pedido</button>
+        <button onclick="irParaIdentificacao()" class="w-full btn-primary py-3 rounded-lg font-semibold">Finalizar Pedido</button>
     </div>
 </div>
 
-<!-- MODAL DADOS CLIENTE -->
-<div id="modal_dados_cliente" class="tela-modal">
-    <div class="modal-conteudo">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-lg">Entrar com WhatsApp</h3>
-            <button onclick="fecharDadosCliente()" class="text-textMuted text-xl">&times;</button>
+<!-- MODAL IDENTIFICAÇÃO CLIENTE -->
+<div id="modal_identificacao" class="tela-modal">
+    <div class="modal-conteudo max-w-sm">
+        <div class="text-center mb-4">
+            <h3 class="text-lg font-bold">Entrar com WhatsApp</h3>
+            <p class="text-sm text-textMuted mt-2">Confirmamos sua identidade pelo número de WhatsApp. Não enviamos código, só validamos se o número existe.</p>
         </div>
-        <p class="text-sm text-textMuted mb-4">Confirmamos sua identidade pelo número de WhatsApp. Não enviamos código, só validamos se o número existe.</p>
-        <div class="mb-3">
-            <label class="block text-sm mb-1">WhatsApp</label>
-            <div class="flex gap-2 items-center">
-                <span class="text-sm text-textMuted">+55</span>
-                <input type="text" id="cliente_whatsapp" class="input-field" placeholder="(86) 99985-0573" required>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm mb-1">WhatsApp</label>
+                <div class="flex items-center gap-2 border border-gray-300 rounded-lg px-3">
+                    <span>+55</span>
+                    <input type="tel" id="cliente_whatsapp" class="input-field border-0 p-0" placeholder="(86) 99985-0573" required>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm mb-1">Como podemos te chamar?</label>
+                <input type="text" id="cliente_nome" class="input-field" required>
             </div>
         </div>
-        <div class="mb-6">
-            <label class="block text-sm mb-1">Como podemos te chamar?</label>
-            <input type="text" id="cliente_nome" class="input-field" placeholder="Seu nome" required>
-        </div>
-        <button onclick="avancarParaEntrega()" class="w-full btn-primary py-3 rounded-lg font-semibold">Continuar</button>
-        <p class="text-xs text-textMuted mt-3 text-center">Ao continuar você confirma que este WhatsApp é seu.</p>
+        <p class="text-xs text-center text-textMuted mt-4 mb-6">Ao continuar você confirma que este número é seu.</p>
+        <button onclick="irParaEntrega()" class="w-full btn-primary py-3 rounded-lg font-semibold">Continuar</button>
     </div>
 </div>
 
-<!-- TELA FINALIZAR PEDIDO -->
-<div id="tela_finalizar" class="tela-modal">
-    <div class="modal-conteudo max-w-lg">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="font-bold text-lg">Finalizar Pedido</h3>
-            <button onclick="fecharFinalizar()" class="text-textMuted text-xl">&times;</button>
+<!-- MODAL ENTREGA / ENDEREÇO / PAGAMENTO -->
+<div id="modal_finalizar" class="tela-modal">
+    <div class="modal-conteudo max-w-md">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <i class="fa fa-user text-gray-500"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold" id="exibe_nome_cliente"></h4>
+                    <p class="text-sm text-textMuted" id="exibe_whatsapp_cliente"></p>
+                </div>
+            </div>
+            <button class="text-sm text-primary">Ver Conta</button>
         </div>
 
-        <div class="flex gap-4 mb-6">
-            <div id="op_entrega" class="opcao-entrega selecionada flex-1" onclick="selecionarModalidade('entrega')">
-                <i class="fa fa-truck text-xl mb-2"></i>
-                <p>Entrega</p>
-            </div>
-            <div id="op_retirada" class="opcao-entrega flex-1" onclick="selecionarModalidade('retirada')">
-                <i class="fa fa-home text-xl mb-2"></i>
-                <p>Retirada</p>
-            </div>
-        </div>
-
-        <div id="campos_entrega" class="mb-6">
-            <p class="text-sm text-red-500 mb-2">Preencha o endereço de entrega para continuar.</p>
-            <input type="text" id="rua" placeholder="Rua" class="input-field mb-2">
-            <div class="flex gap-2 mb-2">
-                <input type="text" id="numero" placeholder="N°" class="input-field">
-                <input type="text" id="bairro" placeholder="Bairro" class="input-field">
-            </div>
-            <input type="text" id="complemento" placeholder="Complemento" class="input-field mb-2">
-            <input type="text" id="cep" placeholder="CEP" class="input-field mb-4">
-            <button class="w-full border border-gray-200 rounded-lg p-2 text-sm text-textMuted flex items-center justify-center gap-2 mb-4">
-                <i class="fa fa-map-marker"></i> Digitar endereço manualmente
+        <div class="flex gap-3 mb-6">
+            <button onclick="selecionarModalidade('entrega')" id="btn_entrega" class="opcao-entrega flex-1 selecionada">
+                <i class="fa fa-truck text-xl mb-1"></i><br>Entrega
+            </button>
+            <button onclick="selecionarModalidade('retirada')" id="btn_retirada" class="opcao-entrega flex-1">
+                <i class="fa fa-home text-xl mb-1"></i><br>Retirada
             </button>
         </div>
 
+        <div id="campos_entrega" class="space-y-4 mb-6">
+            <label class="font-medium">Endereço de Entrega</label>
+            <input type="text" id="endereco_busca" class="input-field" placeholder="Digite o endereço">
+            <div class="flex gap-2">
+                <input type="text" id="endereco_nome" class="input-field flex-1" placeholder="Salvar como: Casa, Trabalho...">
+                <button class="btn-primary px-4">Salvar</button>
+            </div>
+            <button class="text-sm text-primary">Digitar endereço manualmente</button>
+            <div class="bg-yellow-50 border border-yellow-200 rounded p-2 text-xs text-yellow-800">
+                <i class="fa fa-info-circle"></i> O frete será calculado e informado após o envio do pedido.
+            </div>
+        </div>
+
         <div class="mb-6">
-            <h4 class="font-semibold mb-3">Forma de Pagamento</h4>
-            <div class="opcao-pagamento" onclick="selecionarPagamento('dinheiro')">
+            <h4 class="font-medium mb-3">Forma de Pagamento</h4>
+            <div onclick="selecionarPagamento('dinheiro')" class="opcao-pagamento">
                 <input type="radio" name="pagamento" id="pag_dinheiro">
                 <label for="pag_dinheiro">Dinheiro</label>
             </div>
-            <div class="opcao-pagamento" onclick="selecionarPagamento('pix')">
+            <div onclick="selecionarPagamento('pix')" class="opcao-pagamento">
                 <input type="radio" name="pagamento" id="pag_pix">
                 <label for="pag_pix">Pix</label>
             </div>
-            <div class="opcao-pagamento" onclick="selecionarPagamento('debito')">
+            <div onclick="selecionarPagamento('debito')" class="opcao-pagamento">
                 <input type="radio" name="pagamento" id="pag_debito">
                 <label for="pag_debito">Débito</label>
             </div>
-            <div class="opcao-pagamento" onclick="selecionarPagamento('credito')">
+            <div onclick="selecionarPagamento('credito')" class="opcao-pagamento">
                 <input type="radio" name="pagamento" id="pag_credito">
                 <label for="pag_credito">Crédito</label>
             </div>
-            <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded mt-3">O frete será calculado e informado após o envio do pedido.</p>
         </div>
 
-        <div class="border-t border-b border-borderColor py-4 mb-4">
-            <div class="flex justify-between text-sm mb-2">
-                <span>Subtotal:</span>
-                <span id="subtotal_final">R$ 0,00</span>
-            </div>
-            <div class="flex justify-between text-sm mb-2">
-                <span>Frete:</span>
-                <span>calculado após pedido</span>
-            </div>
-            <div class="flex justify-between text-lg font-bold mt-3">
-                <span>Total parcial:</span>
-                <span id="total_final" class="text-primary">R$ 0,00</span>
-            </div>
+        <div class="flex justify-between items-center mb-4 text-sm">
+            <span>Subtotal</span>
+            <span id="subtotal_final">R$ 0,00</span>
+        </div>
+        <div class="flex justify-between items-center mb-4 text-sm">
+            <span>Frete</span>
+            <span>a calcular após pedido</span>
+        </div>
+        <div class="flex justify-between items-center font-bold text-lg mb-6">
+            <span>Total parcial</span>
+            <span id="total_final">R$ 0,00</span>
         </div>
 
-        <button onclick="enviarPedidoWhatsApp()" class="w-full btn-primary py-4 rounded-lg font-semibold text-lg">
-            Enviar Pedido por WhatsApp
-        </button>
+        <button onclick="enviarPedidoWhatsApp()" class="w-full btn-primary py-3 rounded-lg font-semibold">Enviar Pedido por WhatsApp</button>
     </div>
 </div>
 
 <script>
-let usuarioLogado = null;
-let produtoAtual = null;
-let quantidadeAtual = 1;
-let modalidade = 'entrega';
-let formaPagamento = 'pix';
-let dadosCliente = {};
-let baseUrl = window.location.origin + window.location.pathname;
-
-function mostrarAba(nome) {
-    document.querySelectorAll('.aba').forEach(aba => aba.classList.remove('ativa'));
-    document.getElementById(nome).classList.add('ativa');
+// Funções de navegação
+function mostrarAba(id) {
+    document.querySelectorAll('.aba').forEach(el => el.classList.remove('ativa'));
+    document.getElementById(id).classList.add('ativa');
 }
 
-function mostrarSecao(nome) {
-    document.querySelectorAll('.secao').forEach(sec => sec.classList.remove('ativa'));
-    document.getElementById(nome).classList.add('ativa');
-}
-
-function salvarCadastro() {
-    const loja = document.getElementById('cad_loja').value.trim();
-    const nome = document.getElementById('cad_nome').value.trim();
-    const whatsapp = document.getElementById('cad_whatsapp').value.trim().replace(/\D/g, '');
-    const email = document.getElementById('cad_email').value.trim();
-    const senha = document.getElementById('cad_senha').value.trim();
-    const chavePix = document.getElementById('cad_chavepix').value.trim() || whatsapp;
-    const nomePix = document.getElementById('cad_nomepix').value.trim() || loja;
-
-    if(!loja || !nome || !whatsapp || !email || !senha) return alert('Preencha todos os campos obrigatórios!');
-
-    const usuario = {
-        id: Date.now(),
-        loja, nome, whatsapp, email, senha, chavePix, nomePix,
-        produtos: [
-            {id:1, nome:"Duplo Especial", preco:17.99, desc:"", imagem:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=150", ativo:true}
-        ]
-    };
-
-    localStorage.setItem('usuario_'+email, JSON.stringify(usuario));
-    alert('Cadastro realizado com sucesso! Faça login para acessar.');
-    mostrarAba('login');
-}
-
-function fazerLogin() {
-    const usuario = document.getElementById('log_usuario').value.trim();
-    const senha = document.getElementById('log_senha').value.trim();
-    let dados = null;
-
-    Object.keys(localStorage).forEach(chave => {
-        if(chave.startsWith('usuario_')) {
-            const u = JSON.parse(localStorage.getItem(chave));
-            if(u.email === usuario || u.whatsapp === usuario.replace(/\D/g, '')) dados = u;
-        }
-    });
-
-    if(!dados) return alert('Conta não encontrada!');
-    if(dados.senha !== senha) return alert('Senha incorreta!');
-
-    usuarioLogado = dados;
-    atualizarPainel();
-    mostrarAba('painel');
-}
-
-function atualizarPainel() {
-    document.getElementById('nome_loja_painel').textContent = usuarioLogado.loja;
-    document.getElementById('link_loja').value = `${baseUrl}?id=${usuarioLogado.id}`;
-    carregarListaProdutos();
-}
-
-function carregarListaProdutos() {
-    const lista = document.getElementById('lista_produtos');
-    lista.innerHTML = '';
-    usuarioLogado.produtos.forEach(prod => {
-        lista.innerHTML += `
-        <div class="flex justify-between items-center p-3 border border-borderColor rounded-lg">
-            <div class="flex items-center gap-3">
-                <img src="${prod.imagem || 'https://via.placeholder.com/50'}" alt="${prod.nome}" class="w-12 h-12 rounded object-cover">
-                <div>
-                    <h4 class="font-medium">${prod.nome}</h4>
-                    <p class="text-sm text-textMuted">Sem categoria • R$ ${prod.preco.toFixed(2).replace('.', ',')}</p>
-                </div>
-            </div>
-            <div class="flex gap-3 items-center">
-                <label class="switch">
-                    <input type="checkbox" ${prod.ativo ? 'checked' : ''} onchange="alterarStatus(${prod.id}, this.checked)">
-                    <span class="slider"></span>
-                </label>
-                <button class="text-primary hover:text-primaryLight"><i class="fa fa-pencil"></i></button>
-                <button class="text-red-500 hover:text-red-600" onclick="excluirProduto(${prod.id})"><i class="fa fa-trash"></i></button>
-            </div>
-        </div>`;
-    });
-}
-
-function abrirMaisOpcoes() {
-    document.getElementById('modal_mais_opcoes').classList.add('ativa');
-}
-function fecharMaisOpcoes() {
-    document.getElementById('modal_mais_opcoes').classList.remove('ativa');
-}
-
-function abrirModalProduto() {
-    document.getElementById('modal_produto').classList.add('ativa');
-}
-function fecharModalProduto() {
-    document.getElementById('modal_produto').classList.remove('ativa');
-}
-
-function salvarProduto() {
-    const nome = document.getElementById('prod_nome').value.trim();
-    const preco = parseFloat(document.getElementById('prod_preco').value);
-    const desc = document.getElementById('prod_desc').value.trim();
-    const imagem = document.getElementById('prod_imagem').value.trim() || 'https://via.placeholder.com/150';
-
-    if(!nome || !preco || isNaN(preco) || preco <= 0) return alert('Preencha nome e preço corretamente!');
-
-    usuarioLogado.produtos.push({
-        id: Date.now(),
-        nome, preco, desc, imagem, ativo: true
-    });
-    localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
-    carregarListaProdutos();
-    fecharModalProduto();
-    alert('Produto adicionado!');
-}
-
-function alterarStatus(id, status) {
-    const prod = usuarioLogado.produtos.find(p => p.id === id);
-    if(prod) {
-        prod.ativo = status;
-        localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
-    }
-}
-
-function excluirProduto(id) {
-    if(!confirm('Deseja excluir este produto?')) return;
-    usuarioLogado.produtos = usuarioLogado.produtos.filter(p => p.id !== id);
-    localStorage.setItem('usuario_'+usuarioLogado.email, JSON.stringify(usuarioLogado));
-    carregarListaProdutos();
+function mostrarSecao(id) {
+    document.querySelectorAll('.secao').forEach(el => el.classList.remove('ativa'));
+    document.getElementById(id).classList.add('ativa');
 }
 
 function copiarCampo(id) {
-    const campo = document.getElementById(id);
-    campo.select();
-    campo.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(campo.value);
-    alert('Link copiado!');
+    const el = document.getElementById(id);
+    el.select();
+    document.execCommand('copy');
+    alert('Copiado!');
 }
 
 function compartilharLink() {
     const link = document.getElementById('link_loja').value;
-    window.open(`https://wa.me/?text=${encodeURIComponent('Acesse meu cardápio: ' + link)}`, '_blank');
+    if(navigator.share) navigator.share({title: 'Minha Loja', text: 'Acesse meu cardápio:', url: link});
+    else copiarCampo('link_loja');
 }
 
 function abrirWhatsApp() {
-    window.open(`https://wa.me/55${usuarioLogado.whatsapp}`, '_blank');
+    if(!usuarioLogado) return;
+    window.open(`https://wa.me/55${usuarioLogado.whatsapp.replace(/\D/g,'')}`, '_blank');
 }
 
-function sairConta() {
-    usuarioLogado = null;
-    mostrarAba('inicio');
-}
+function abrirMaisOpcoes() { document.getElementById('modal_mais_opcoes').classList.add('ativa'); }
+function fecharMaisOpcoes() { document.getElementById('modal_mais_opcoes').classList.remove('ativa'); }
 
-function abrirModalPedido(produto) {
-    produtoAtual = produto;
-    quantidadeAtual = 1;
-    document.getElementById('item_pedido_modal').innerHTML = `
-        <div class="flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <img src="${produto.imagem}" alt="${produto.nome}" class="w-12 h-12 rounded object-cover">
-                <h4 class="font-bold text-lg">${produto.nome}</h4>
-            </div>
-            <span class="font-semibold">R$ ${produto.preco.toFixed(2).replace('.', ',')}</span>
-        </div>`;
-    document.getElementById('qtd_item').textContent = quantidadeAtual;
-    document.getElementById('modal_pedido').classList.add('ativa');
-}
+function abrirModalProduto() { document.getElementById('modal_produto').classList.add('ativa'); }
+function fecharModalProduto() { document.getElementById('modal_produto').classList.remove('ativa'); }
 
-function fecharModalPedido() {
-    document.getElementById('modal_pedido').classList.remove('ativa');
-}
+function abrirModalPedido() { document.getElementById('modal_pedido').classList.add('ativa'); }
+function fecharModalPedido() { document.getElementById('modal_pedido').classList.remove('ativa'); }
 
-function alterarQuantidade(valor) {
-    quantidadeAtual = Math.max(1, quantidadeAtual + valor);
-    document.getElementById('qtd_item').textContent = quantidadeAtual;
-}
-
-function abrirDadosCliente() {
+function irParaIdentificacao() {
     fecharModalPedido();
-    document.getElementById('modal_dados_cliente').classList.add('ativa');
+    document.getElementById('modal_identificacao').classList.add('ativa');
 }
 
-function fecharDadosCliente() {
-    document.getElementById('modal_dados_cliente').classList.remove('ativa');
-}
-
-function avancarParaEntrega() {
+function irParaEntrega() {
     const nome = document.getElementById('cliente_nome').value.trim();
-    const whatsapp = document.getElementById('cliente_whatsapp').value.trim();
-    if(!nome || !whatsapp) return alert('Preencha nome e WhatsApp!');
-    dadosCliente = { nome, whatsapp };
-    fecharDadosCliente();
-    abrirFinalizar();
-}
+    const whatsapp = document.getElementById('cliente_whatsapp').value.replace(/\D/g,'');
+    if(!nome || !whatsapp) return alert('Preencha todos os campos!');
 
-function abrirFinalizar() {
-    const subtotal = (produtoAtual.preco * quantidadeAtual);
-    document.getElementById('subtotal_final').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-    document.getElementById('total_final').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-    document.getElementById('tela_finalizar').classList.add('ativa');
-}
-
-function fecharFinalizar() {
-    document.getElementById('tela_finalizar').classList.remove('ativa');
+    pedidoAtual.cliente = { nome, whatsapp };
+    document.getElementById('exibe_nome_cliente').textContent = nome;
+    document.getElementById('exibe_whatsapp_cliente').textContent = `(${whatsapp.slice(0,2)}) ${whatsapp.slice(2)}`;
+    document.getElementById('modal_identificacao').classList.remove('ativa');
+    document.getElementById('modal_finalizar').classList.add('ativa');
 }
 
 function selecionarModalidade(tipo) {
-    modalidade = tipo;
-    document.getElementById('op_entrega').classList.toggle('selecionada', tipo === 'entrega');
-    document.getElementById('op_retirada').classList.toggle('selecionada', tipo === 'retirada');
-    document.getElementById('campos_entrega').style.display = tipo === 'entrega' ? 'block' : 'none';
+    if(tipo === 'entrega') {
+        document.getElementById('btn_entrega').classList.add('selecionada');
+        document.getElementById('btn_retirada').classList.remove('selecionada');
+        document.getElementById('campos_entrega').style.display = 'block';
+        pedidoAtual.modalidade = 'ENTREGA';
+    } else {
+        document.getElementById('btn_retirada').classList.add('selecionada');
+        document.getElementById('btn_entrega').classList.remove('selecionada');
+        document.getElementById('campos_entrega').style.display = 'none';
+        pedidoAtual.modalidade = 'RETIRADA';
+    }
 }
 
 function selecionarPagamento(tipo) {
-    formaPagamento = tipo;
     document.querySelectorAll('.opcao-pagamento').forEach(el => el.classList.remove('selecionada'));
     event.currentTarget.classList.add('selecionada');
-    event.currentTarget.querySelector('input').checked = true;
+    pedidoAtual.pagamento = tipo.toUpperCase();
 }
 
-function gerarCodigoPedido() {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
+// Cadastro
+function salvarCadastro() {
+    const loja = document.getElementById('cad_loja').value.trim();
+    const nome = document.getElementById('cad_nome').value.trim();
+    const whatsapp = document.getElementById('cad_whatsapp').value.replace(/\D/g,'');
+    const email = document.getElementById('cad_email').value.trim();
+    const senha = document.getElementById('cad_senha').value.trim();
+    const chavepix = document.getElementById('cad_chavepix').value.trim();
+    const nomepix = document.getElementById('cad_nomepix').value.trim();
+
+    if(!loja || !nome || !whatsapp || !email || !senha) return alert('Preencha todos os campos obrigatórios!');
+
+    const usuario = { id: Date.now(), loja, nome, whatsapp, email, senha, chavepix, nomepix, produtos: [], pedidos: [] };
+    localStorage.setItem(`menuFlex_${email}`, JSON.stringify(usuario));
+    localStorage.setItem(`menuFlex_${whatsapp}`, JSON.stringify(usuario));
+
+    // Enviar aviso para você
+    const texto = `✅ NOVO CADASTRO - MenuFlex\n\n🏪 Loja: ${loja}\n👤 Nome: ${nome}\n📞 WhatsApp: (${whatsapp.slice(0,2)}) ${whatsapp.slice(2)}\n📧 E-mail: ${email}\n🔑 Chave Pix: ${chavepix || 'Não informado'}\n💳 Titular Pix: ${nomepix || 'Não informado'}`;
+    window.open(`https://wa.me/${NUMERO_ADMIN}?text=${encodeURIComponent(texto)}`, '_blank');
+
+    alert('Cadastro realizado com sucesso!');
+    mostrarAba('login');
+}
+
+// Login
+function fazerLogin() {
+    const usuarioInput = document.getElementById('log_usuario').value.trim();
+    const senha = document.getElementById('log_senha').value.trim();
+
+    const dados = localStorage.getItem(`menuFlex_${usuarioInput}`);
+    if(!dados) return alert('Conta não encontrada!');
+
+    const usuario = JSON.parse(dados);
+    if(usuario.senha !== senha) return alert('Senha incorreta!');
+
+    usuarioLogado = usuario;
+    document.getElementById('nome_loja_painel').textContent = usuario.loja;
+    document.getElementById('link_loja').value = `${window.location.origin}/loja.html?id=${usuario.id}`;
+    document.getElementById('nome_loja_cliente').textContent = usuario.loja;
+    carregarProdutos();
+    mostrarAba('painel');
+}
+
+// Recuperação de senha
+function solicitarRecuperacao() {
+    const contato = document.getElementById('recuperar_contato').value.trim();
+    const texto = `🔒 SOLICITAÇÃO DE RECUPERAÇÃO DE SENHA\n\nContato informado: ${contato}\nSolicite os dados diretamente ao usuário.`;
+    window.open(`https://wa.me/${NUMERO_ADMIN}?text=${encodeURIComponent(texto)}`, '_blank');
+    alert('Solicitação enviada para o administrador! Em breve você receberá uma resposta.');
+    mostrarAba('login');
+}
+
+// Produtos
+function salvarProduto() {
+    if(!usuarioLogado) return;
+    const nome = document.getElementById('prod_nome').value.trim();
+    const preco = parseFloat(document.getElementById('prod_preco').value);
+    const desc = document.getElementById('prod_desc').value.trim();
+    const imagem = document.getElementById('prod_imagem').value.trim();
+
+    if(!nome || !preco) return alert('Preencha nome e preço!');
+
+    const produto = { id: Date.now(), nome, preco, desc, imagem, ativo: true };
+    usuarioLogado.produtos.push(produto);
+    atualizarUsuario();
+    carregarProdutos();
+    fecharModalProduto();
+}
+
+function carregarProdutos() {
+    if(!usuarioLogado) return;
+    const lista = document.getElementById('lista_produtos');
+    const listaCliente = document.getElementById('lista_produtos_cliente');
+    lista.innerHTML = '';
+    listaCliente.innerHTML = '';
+
+    usuarioLogado.produtos.forEach(p => {
+        // Painel
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between border border-gray-100 rounded-lg p-3';
+        div.innerHTML = `
+            <div class="flex items-center gap-3">
+                <img src="${p.imagem || 'https://via.placeholder.com/60'}" alt="${p.nome}" class="w-12 h-12 rounded object-cover">
+                <div>
+                    <h4 class="font-semibold">${p.nome}</h4>
+                    <p class="text-xs text-textMuted">Sem categoria</p>
+                    <p class="text-xs text-textMuted">${p.desc || 'Sem descrição'}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="font-bold">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                <label class="switch">
+                    <input type="checkbox" ${p.ativo ? 'checked' : ''} onchange="alterarStatusProduto(${p.id})">
+                    <span class="slider"></span>
+                </label>
+                <button class="text-blue-500"><i class="fa fa-pencil"></i></button>
+                <button class="text-red-500" onclick="excluirProduto(${p.id})"><i class="fa fa-trash"></i></button>
+            </div>
+        `;
+        lista.appendChild(div);
+
+        // Cardápio cliente
+        if(p.ativo) {
+            const divCli = document.createElement('div');
+            divCli.className = 'flex items-center justify-between border border-gray-100 rounded-lg p-4';
+            divCli.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <img src="${p.imagem || 'https://via.placeholder.com/80'}" alt="${p.nome}" class="w-16 h-16 rounded object-cover">
+                    <div>
+                        <h4 class="font-semibold text-lg">${p.nome}</h4>
+                        <p class="text-sm text-textMuted">${p.desc || ''}</p>
+                        <p class="font-bold text-lg mt-1">R$ ${p.preco.toFixed(2).replace('.',',')}</p>
+                    </div>
+                </div>
+                <button onclick="adicionarAoPedido(${p.id})" class="btn-primary px-4 py-2 rounded-lg">+ Adicionar</button>
+            `;
+            listaCliente.appendChild(divCli);
+        }
+    });
+}
+
+function alterarStatusProduto(id) {
+    const p = usuarioLogado.produtos.find(x => x.id === id);
+    if(p) { p.ativo = !p.ativo; atualizarUsuario(); carregarProdutos(); }
+}
+
+function excluirProduto(id) {
+    usuarioLogado.produtos = usuarioLogado.produtos.filter(x => x.id !== id);
+    atualizarUsuario();
+    carregarProdutos();
+}
+
+function atualizarUsuario() {
+    localStorage.setItem(`menuFlex_${usuarioLogado.email}`, JSON.stringify(usuarioLogado));
+    localStorage.setItem(`menuFlex_${usuarioLogado.whatsapp}`, JSON.stringify(usuarioLogado));
+}
+
+// Pedidos
+function adicionarAoPedido(id) {
+    const p = usuarioLogado.produtos.find(x => x.id === id);
+    if(!p) return;
+    const item = pedidoAtual.itens.find(x => x.id === id);
+    if(item) item.qtd++;
+    else pedidoAtual.itens.push({...p, qtd: 1});
+    atualizarResumoPedido();
+    abrirModalPedido();
+}
+
+function atualizarResumoPedido() {
+    const resumo = document.getElementById('resumo_pedido');
+    let total = 0;
+    resumo.innerHTML = '';
+    pedidoAtual.itens.forEach(i => {
+        const valor = i.preco * i.qtd;
+        total += valor;
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between';
+        div.innerHTML = `
+            <div class="flex items-center gap-3">
+                <img src="${i.imagem || 'https://via.placeholder.com/50'}" class="w-10 h-10 rounded">
+                <div>
+                    <p>${i.nome}</p>
+                    <p class="text-sm text-textMuted">R$ ${i.preco.toFixed(2).replace('.',',')}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="alterarQtd(${i.id}, -1)">-</button>
+                <span>${i.qtd}</span>
+                <button onclick="alterarQtd(${i.id}, 1)">+</button>
+                <span>R$ ${valor.toFixed(2).replace('.',',')}</span>
+            </div>
+        `;
+        resumo.appendChild(div);
+    });
+    document.getElementById('valor_total').textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
+    document.getElementById('subtotal_final').textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
+    document.getElementById('total_final').textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
+}
+
+function alterarQtd(id, qtd) {
+    const item = pedidoAtual.itens.find(x => x.id === id);
+    if(!item) return;
+    item.qtd += qtd;
+    if(item.qtd <= 0) pedidoAtual.itens = pedidoAtual.itens.filter(x => x.id !== id);
+    atualizarResumoPedido();
 }
 
 function enviarPedidoWhatsApp() {
-    const codigo = gerarCodigoPedido();
-    const observacao = document.getElementById('observacao').value.trim();
-    const endereco = modalidade === 'entrega' ? 
-        `${document.getElementById('rua').value.trim()}, ${document.getElementById('numero').value.trim()} - ${document.getElementById('complemento').value.trim()} - ${document.getElementById('bairro').value.trim()} - CEP: ${document.getElementById('cep').value.trim()}` 
-        : 'Retirada na loja';
+    if(!pedidoAtual.itens.length) return alert('Adicione itens ao pedido!');
+    if(!pedidoAtual.cliente) return alert('Identifique-se primeiro!');
 
-    let mensagem = `*Novo Pedido #${codigo}*\n\n`;
-    mensagem += `*Cliente:* ${dadosCliente.nome}\n`;
-    mensagem += `*WhatsApp:* ${dadosCliente.whatsapp}\n`;
-    mensagem += `*Modalidade:* ${modalidade.toUpperCase()}\n`;
-    mensagem += `*Endereço:* ${endereco}\n\n`;
-    mensagem += `*Itens:*\n${quantidadeAtual}x ${produtoAtual.nome} - R$ ${(produtoAtual.preco * quantidadeAtual).toFixed(2).replace('.', ',')}\n`;
-    if(observacao) mensagem += `*Observação:* ${observacao}\n\n`;
-    mensagem += `*Pagamento:* ${formaPagamento.toUpperCase()}\n`;
-    mensagem += `*Subtotal:* R$ ${(produtoAtual.preco * quantidadeAtual).toFixed(2).replace('.', ',')}\n`;
-    mensagem += `*Frete:* calculado após pedido\n`;
-    mensagem += `*Total parcial:* R$ ${(produtoAtual.preco * quantidadeAtual).toFixed(2).replace('.', ',')}\n`;
-    mensagem += `*(Frete a calcular e somar após o pedido)*`;
-
-    window.open(`https://wa.me/55${usuarioLogado.whatsapp}?text=${encodeURIComponent(mensagem)}`, '_blank');
-    fecharFinalizar();
-    alert('Pedido enviado com sucesso!');
-}
-
-function encontrarUsuarioPorId(id) {
-    const chaves = Object.keys(localStorage);
-    for(let chave of chaves) {
-        if(chave.startsWith('usuario_')) {
-            const u = JSON.parse(localStorage.getItem(chave));
-            if(u.id == id) return u;
-        }
-    }
-    return null;
-}
-
-function carregarCardapioCliente(usuario) {
-    usuarioLogado = usuario;
-    document.getElementById('nome_loja_cliente').textContent = usuario.loja;
-    const lista = document.getElementById('lista_produtos_cliente');
-    lista.innerHTML = '';
-    usuario.produtos.filter(p => p.ativo).forEach(prod => {
-        lista.innerHTML += `
-        <div class="flex justify-between items-center p-3 border border-borderColor rounded-lg">
-            <div class="flex items-center gap-3">
-                <img src="${prod.imagem}" alt="${prod.nome}" class="w-16 h-16 rounded object-cover">
-                <div>
-                    <h4 class="font-bold text-lg">${prod.nome}</h4>
-                    <p class="text-primary font-semibold mt-1">R$ ${prod.preco.toFixed(2).replace('.', ',')}</p>
-                </div>
-            </div>
-            <button onclick='abrirModalPedido(${JSON.stringify(prod).replace(/"/g, "&quot;")})' class="btn-primary px-4 py-1 rounded">+ Adicionar</button>
-        </div>`;
+    const numeroPedido = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const endereco = pedidoAtual.modalidade === 'ENTREGA' ? document.getElementById('endereco_busca').value.trim() : 'Retirada no local';
+    let itensTexto = '';
+    let total = 0;
+    pedidoAtual.itens.forEach(i => {
+        const valor = i.preco * i.qtd;
+        total += valor;
+        itensTexto += `${i.qtd}x ${i.nome} - R$ ${valor.toFixed(2).replace('.',',')}\n`;
     });
-    mostrarAba('cardapio_cliente');
-}
 
-window.onload = function() {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    if(id) {
-        const usuario = encontrarUsuarioPorId(id);
-        if(usuario) carregarCardapioCliente(usuario);
-    }
-}
-</script>
-
-</body>
-</html>
+    const mensagem = `📝 NOVO PEDIDO #${numeroPedido}\n\n👤 Cliente: ${pedidoAtual.cliente.nome}\n📞 Contato: (${pedidoAtual.cliente.whatsapp.slice(0,2)}) ${pedidoAtual.cliente.whatsapp.slice(2)}\n🚚 Modalidade: ${pedidoAtual.modalidade}\n📍 Endereço: ${endereco}\n\n📦 Itens:\n${itensTexto}\n💳 Pagamento: ${pedidoAtual.pagamento || 'A combinar
