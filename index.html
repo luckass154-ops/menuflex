@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MenuFlex - Seu Cardápio Digital</title>
+    <title>MenuFlex - Cardápio Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -32,7 +32,7 @@
     </script>
     <style type="text/tailwindcss">
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: linear-gradient(180deg, #050508 0%, #0A0A0F 100%); min-height: 100vh; }
+        body { background: #000000; min-height: 100vh; }
         .aba { display: none; }
         .aba.ativa { display: block; }
         .secao { display: none; }
@@ -54,8 +54,21 @@
         .categoria { background: #1A1A2E; color: #B0B0C8; border-radius: 999px; padding: 8px 16px; font-size: 14px; transition: all 0.2s; border: none; }
         .categoria:hover { background: #222233; }
         .badge-promo { background: #FF9500; color: #000; font-size: 10px; padding: 2px 6px; border-radius: 4px; position: absolute; top: 8px; right: 8px; font-weight: bold; }
-        .pedido-card { background: #12121F; border: 1px solid #222233; border-radius: 0.75rem; }
-        .pix-card { background: linear-gradient(135deg, #7B2FFE 0%, #9D29FF 100%); color: white; border-radius: 0.75rem; padding: 24px; text-align: center; }
+        .link-box { background: #1A1A2E; border: 1px solid #2E2E48; border-radius: 0.5rem; padding: 0.75rem; display: flex; gap: 0.5rem; align-items: center; margin: 0.5rem 0; }
+        .link-box input { flex: 1; background: transparent; border: none; outline: none; color: #E0E0FF; font-size: 0.9rem; }
+
+        /* Estilos da área do cliente */
+        .cliente-container { max-width: 420px; margin: 0 auto; background: #000; min-height: 100vh; color: #fff; }
+        .banner-cliente { width: 100%; height: 220px; background: linear-gradient(135deg, #120522 0%, #000 100%); position: relative; overflow: hidden; border-radius: 0 0 16px 16px; }
+        .banner-cliente img { width: 100%; height: 100%; object-fit: cover; }
+        .categoria-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 16px 0; scrollbar-width: none; }
+        .categoria-scroll::-webkit-scrollbar { display: none; }
+        .produto-card { background: #12121F; border-radius: 12px; padding: 12px; position: relative; }
+        .qtd-controle { display: flex; align-items: center; gap: 8px; background: #1E1E2F; border-radius: 20px; padding: 4px 8px; }
+        .qtd-btn { width: 24px; height: 24px; border-radius: 50%; background: #7B2FFE; border: none; color: white; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .carrinho-barra { position: fixed; bottom: 0; left: 0; right: 0; background: #12121F; padding: 12px 16px; border-top: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        .tela-pedido { background: #000; position: fixed; inset: 0; z-index: 50; overflow-y: auto; }
+        .sucesso-box { text-align: center; padding: 40px 20px; }
         .check-circle { width: 80px; height: 80px; border-radius: 50%; background: #7B2FFE; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 40px; color: white; }
     </style>
 </head>
@@ -78,7 +91,7 @@
     </div>
 </header>
 
-<!-- ABA: TELA INICIAL (COM FOTO DO CELULAR) -->
+<!-- ABA: TELA INICIAL -->
 <section id="inicio" class="aba ativa mb-16">
     <div class="grid md:grid-cols-2 gap-12 items-center">
         <div>
@@ -86,36 +99,31 @@
             <ul class="space-y-4 mb-8">
                 <li class="flex items-center gap-3 text-lg">
                     <i class="fa fa-shopping-cart text-primary text-xl"></i>
-                    <span>Cardápio digital completo</span>
+                    <span>Cardápio digital exclusivo para cada loja</span>
                 </li>
                 <li class="flex items-center gap-3 text-lg">
                     <i class="fa fa-whatsapp text-primary text-xl"></i>
-                    <span>Pedidos via WhatsApp</span>
+                    <span>Pedidos enviados direto para o seu WhatsApp</span>
                 </li>
                 <li class="flex items-center gap-3 text-lg">
                     <i class="fa fa-map-marker text-primary text-xl"></i>
-                    <span>Taxa por bairro automática</span>
+                    <span>Taxa de entrega personalizada por bairro</span>
                 </li>
                 <li class="flex items-center gap-3 text-lg">
                     <i class="fa fa-credit-card text-primary text-xl"></i>
-                    <span>Pagamento via Pix</span>
+                    <span>Pagamento via Pix com sua chave</span>
                 </li>
                 <li class="flex items-center gap-3 text-lg">
-                    <i class="fa fa-line-chart text-primary text-xl"></i>
-                    <span>Relatórios de vendas</span>
-                </li>
-                <li class="flex items-center gap-3 text-lg">
-                    <i class="fa fa-cog text-primary text-xl"></i>
-                    <span>Painel administrativo</span>
+                    <i class="fa fa-link text-primary text-xl"></i>
+                    <span>Link único para compartilhar com seus clientes</span>
                 </li>
             </ul>
             <p class="text-xl font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                🚀 Simples para o cliente, completo para você!
+                🚀 Cada loja tem seu próprio sistema, sem misturar dados!
             </p>
         </div>
         <div class="flex justify-center">
-            <!-- FOTO DO CELULAR IGUAL A QUE VOCÊ ENVIOU -->
-            <img src="https://i.imgur.com/9wQZ8fL.jpg" alt="Visual do cardápio no celular" class="max-w-xs h-auto rounded-xl shadow-2xl shadow-primary/20">
+            <img src="https://i.imgur.com/7ZbKQxH.png" alt="Visual do cardápio no celular" class="max-w-xs h-auto rounded-xl shadow-2xl shadow-primary/20">
         </div>
     </div>
 </section>
@@ -131,7 +139,7 @@
                 <li><i class="fa fa-check text-green mr-2"></i>Até 15 produtos</li>
                 <li><i class="fa fa-check text-green mr-2"></i>3 categorias</li>
                 <li><i class="fa fa-check text-green mr-2"></i>Pedidos via WhatsApp</li>
-                <li><i class="fa fa-check text-green mr-2"></i>Link exclusivo do cardápio</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Link exclusivo da sua loja</li>
             </ul>
             <button onclick="irParaCadastro('gratuito')" class="w-full py-2 rounded-lg bg-grayMid hover:bg-gray-600">Começar Grátis</button>
         </div>
@@ -143,7 +151,7 @@
                 <li><i class="fa fa-check text-green mr-2"></i>Produtos ilimitados</li>
                 <li><i class="fa fa-check text-green mr-2"></i>Categorias ilimitadas</li>
                 <li><i class="fa fa-check text-green mr-2"></i>Taxa de entrega por bairro</li>
-                <li><i class="fa fa-check text-green mr-2"></i>Pagamento via Pix</li>
+                <li><i class="fa fa-check text-green mr-2"></i>Chave Pix personalizada</li>
             </ul>
             <button onclick="irParaCadastro('basico')" class="w-full py-2 rounded-lg bg-gradient-to-r from-primary to-primaryLight hover:opacity-90">Assinar Agora</button>
         </div>
@@ -163,7 +171,7 @@
 
 <!-- ABA: CADASTRO -->
 <section id="cadastro" class="aba max-w-md mx-auto stat-card p-6 shadow-lg">
-    <h2 class="text-2xl font-bold text-center mb-6">Criar Conta</h2>
+    <h2 class="text-2xl font-bold text-center mb-6">Criar Sua Loja</h2>
     <div class="space-y-4">
         <div>
             <label class="block text-sm mb-1">Nome completo</label>
@@ -179,21 +187,29 @@
         </div>
         <div>
             <label class="block text-sm mb-1">WhatsApp da loja</label>
-            <input type="text" id="cad_telefone" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="Ex: 86999998888">
+            <input type="text" id="cad_telefone" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="Ex: 86999998888" required>
         </div>
         <div>
             <label class="block text-sm mb-1">Nome da sua loja</label>
-            <input type="text" id="cad_loja" class="w-full bg-dark border border-grayMid rounded p-2">
+            <input type="text" id="cad_loja" class="w-full bg-dark border border-grayMid rounded p-2" required>
+        </div>
+        <div>
+            <label class="block text-sm mb-1">Chave Pix da loja</label>
+            <input type="text" id="cad_chavepix" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="CPF, CNPJ ou telefone">
+        </div>
+        <div>
+            <label class="block text-sm mb-1">Nome do favorecido Pix</label>
+            <input type="text" id="cad_nomepix" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="Nome completo ou razão social">
         </div>
         <input type="hidden" id="plano_escolhido" value="gratuito">
-        <button onclick="salvarCadastro()" class="w-full bg-gradient-to-r from-primary to-primaryLight py-3 rounded-lg font-semibold">Cadastrar</button>
+        <button onclick="salvarCadastro()" class="w-full bg-gradient-to-r from-primary to-primaryLight py-3 rounded-lg font-semibold">Criar Minha Loja</button>
     </div>
     <p class="text-center mt-4 text-sm text-textMuted">Já tem conta? <a href="#" onclick="mostrarAba('login')" class="text-primary hover:underline">Entrar</a></p>
 </section>
 
 <!-- ABA: LOGIN -->
 <section id="login" class="aba max-w-md mx-auto stat-card p-6 shadow-lg">
-    <h2 class="text-2xl font-bold text-center mb-6">Acessar Conta</h2>
+    <h2 class="text-2xl font-bold text-center mb-6">Acessar Minha Loja</h2>
     <div class="space-y-4">
         <div>
             <label class="block text-sm mb-1">E-mail</label>
@@ -205,322 +221,197 @@
         </div>
         <button onclick="fazerLogin()" class="w-full bg-gradient-to-r from-primary to-primaryLight py-3 rounded-lg font-semibold">Entrar</button>
     </div>
-    <p class="text-center mt-4 text-sm text-textMuted">Não tem conta? <a href="#" onclick="mostrarAba('cadastro')" class="text-primary hover:underline">Criar conta grátis</a></p>
+    <p class="text-center mt-4 text-sm text-textMuted">Não tem conta? <a href="#" onclick="mostrarAba('cadastro')" class="text-primary hover:underline">Criar minha loja grátis</a></p>
 </section>
 
 <!-- ABA: PAINEL ADMINISTRATIVO -->
 <section id="painel" class="aba">
     <div class="flex flex-col md:flex-row gap-6">
-        <!-- Barra Lateral -->
         <aside class="sidebar p-4 h-fit">
             <div class="mb-6 pb-4 border-b border-grayMid">
                 <h3 class="font-bold text-lg">MENUFLEX</h3>
-                <p class="text-xs text-textMuted">Olá, Admin</p>
+                <p class="text-xs text-textMuted">Loja: <span id="nome_loja_painel">---</span></p>
             </div>
             <nav class="space-y-2">
                 <button onclick="mostrarSecao('dashboard')" class="w-full text-left px-3 py-2 rounded bg-primary/20 text-primary">Dashboard</button>
-                <button onclick="mostrarSecao('pedidos')" class="w-full text-left px-3 py-2 rounded hover:bg-grayMid">Pedidos</button>
                 <button onclick="mostrarSecao('produtos')" class="w-full text-left px-3 py-2 rounded hover:bg-grayMid">Produtos</button>
                 <button onclick="mostrarSecao('categorias')" class="w-full text-left px-3 py-2 rounded hover:bg-grayMid">Categorias</button>
                 <button onclick="mostrarSecao('bairros')" class="w-full text-left px-3 py-2 rounded hover:bg-grayMid">Bairros e Taxas</button>
-                <button onclick="mostrarSecao('clientes')" class="w-full text-left px-3 py-2 rounded hover:bg-grayMid">Clientes</button>
-                <button onclick="mostrarSecao('promocoes')" class="w-full text-left px-3 py-2 rounded hover:bg-grayMid">Promoções</button>
-                <button onclick="mostrarSecao('relatorios')" class="w-full text-left px-3 py-2 rounded hover:bg-grayMid">Relatórios</button>
                 <button onclick="mostrarSecao('configuracoes')" class="w-full text-left px-3 py-2 rounded hover:bg-grayMid">Configurações</button>
                 <button onclick="sairConta()" class="w-full text-left px-3 py-2 rounded hover:bg-red-900/40 text-red-400 mt-4">Sair</button>
             </nav>
         </aside>
 
-        <!-- Conteúdo Principal -->
         <main class="flex-1">
-            <!-- Dashboard -->
             <div id="dashboard" class="secao ativa">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Dashboard</h2>
-                    <select class="bg-graySoft border border-grayMid rounded p-1">
-                        <option>Hoje</option>
-                        <option>Esta Semana</option>
-                        <option>Este Mês</option>
-                    </select>
+                    <h2 class="text-2xl font-bold">Meu Painel</h2>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="stat-card p-4">
-                        <p class="text-textMuted text-sm">Pedidos</p>
-                        <h3 class="text-2xl font-bold">28</h3>
-                        <span class="text-green text-sm">+12%</span>
+
+                <div class="stat-card p-5 mb-6">
+                    <h3 class="text-lg font-semibold mb-3">Links da Sua Loja</h3>
+                    <div class="link-box">
+                        <i class="fa fa-link text-primary"></i>
+                        <input type="text" id="link_admin" readonly value="Carregando...">
+                        <button onclick="copiarCampo('link_admin')" class="text-primary hover:text-primaryLight"><i class="fa fa-copy"></i></button>
                     </div>
-                    <div class="stat-card p-4">
-                        <p class="text-textMuted text-sm">Faturamento</p>
-                        <h3 class="text-2xl font-bold">R$ 1.264,50</h3>
-                        <span class="text-green text-sm">+8%</span>
+                    <p class="text-xs text-textMuted mb-2">→ Link para você gerenciar sua loja</p>
+
+                    <div class="link-box">
+                        <i class="fa fa-link text-accent"></i>
+                        <input type="text" id="link_cliente" readonly value="Carregando...">
+                        <button onclick="copiarCampo('link_cliente')" class="text-accent hover:text-orange-400"><i class="fa fa-copy"></i></button>
                     </div>
-                    <div class="stat-card p-4">
-                        <p class="text-textMuted text-sm">Ticket médio</p>
-                        <h3 class="text-2xl font-bold">R$ 45,16</h3>
-                        <span class="text-green text-sm">+9%</span>
-                    </div>
-                    <div class="stat-card p-4">
-                        <p class="text-textMuted text-sm">Itens vendidos</p>
-                        <h3 class="text-2xl font-bold">85</h3>
-                        <span class="text-green text-sm">+10%</span>
-                    </div>
-                </div>
-                <div class="stat-card p-6 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg">Pedidos Recentes</h3>
-                        <button class="text-primary text-sm">Ver todos</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="text-left text-textMuted text-sm border-b border-grayMid">
-                                    <th class="pb-3">#</th>
-                                    <th class="pb-3">Cliente</th>
-                                    <th class="pb-3">Bairro</th>
-                                    <th class="pb-3">Valor</th>
-                                    <th class="pb-3">Status</th>
-                                    <th class="pb-3">Hora</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="table-row">
-                                    <td class="py-3">#1027</td>
-                                    <td>Marina Silva</td>
-                                    <td>Promorar</td>
-                                    <td>R$ 63,70</td>
-                                    <td><span class="status-ativo">Recebido</span></td>
-                                    <td>18:45</td>
-                                </tr>
-                                <tr class="table-row">
-                                    <td class="py-3">#1026</td>
-                                    <td>João Santos</td>
-                                    <td>Bela Vista</td>
-                                    <td>R$ 52,90</td>
-                                    <td><span class="status-preparo">Em preparo</span></td>
-                                    <td>18:30</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <p class="text-xs text-textMuted">→ Link para enviar aos seus clientes</p>
                 </div>
             </div>
 
-            <!-- Produtos -->
-            <div id="produtos" class="secao">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Produtos</h2>
-                    <button onclick="adicionarProduto()" class="btn-primary px-4 py-2 flex items-center gap-2">+ Novo produto</button>
-                </div>
-                <div class="stat-card p-6 overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="text-left text-textMuted text-sm border-b border-grayMid">
-                                <th class="pb-3">Produto</th>
-                                <th class="pb-3">Categoria</th>
-                                <th class="pb-3">Preço</th>
-                                <th class="pb-3">Status</th>
-                                <th class="pb-3">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela_produtos">
-                            <tr class="table-row">
-                                <td class="py-3 flex items-center gap-2"><img src="https://i.imgur.com/5XqQ7yY.jpg" class="w-8 h-8 rounded"> Smash Clássico</td>
-                                <td>Smash Burgers</td>
-                                <td>R$ 16,90</td>
-                                <td><span class="status-ativo">Ativo</span></td>
-                                <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="py-3 flex items-center gap-2"><img src="https://i.imgur.com/6LkR9tZ.jpg" class="w-8 h-8 rounded"> Smash Bacon</td>
-                                <td>Smash Burgers</td>
-                                <td>R$ 18,90</td>
-                                <td><span class="status-ativo">Ativo</span></td>
-                                <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Bairros -->
-            <div id="bairros" class="secao">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Bairros e Taxas</h2>
-                    <button onclick="adicionarBairro()" class="btn-primary px-4 py-2 flex items-center gap-2">+ Novo bairro</button>
-                </div>
-                <div class="stat-card p-6 overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="text-left text-textMuted text-sm border-b border-grayMid">
-                                <th class="pb-3">Bairro</th>
-                                <th class="pb-3">Taxa de entrega</th>
-                                <th class="pb-3">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela_bairros">
-                            <tr class="table-row">
-                                <td class="py-3">Promorar</td>
-                                <td>R$ 5,00</td>
-                                <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="py-3">Bela Vista</td>
-                                <td>R$ 6,00</td>
-                                <td><button class="text-primary mr-2"><i class="fa fa-pencil"></i></button><button class="text-red-400"><i class="fa fa-trash"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Outras seções -->
-            <div id="pedidos" class="secao"><h2 class="text-2xl font-bold mb-6">Pedidos</h2><div class="stat-card p-6">Lista de pedidos recebidos</div></div>
-            <div id="categorias" class="secao"><h2 class="text-2xl font-bold mb-6">Categorias</h2><div class="stat-card p-6">Gerencie categorias</div></div>
-            <div id="clientes" class="secao"><h2 class="text-2xl font-bold mb-6">Clientes</h2><div class="stat-card p-6">Lista de clientes</div></div>
-            <div id="promocoes" class="secao"><h2 class="text-2xl font-bold mb-6">Promoções</h2><div class="stat-card p-6">Gerencie promoções</div></div>
-            <div id="relatorios" class="secao"><h2 class="text-2xl font-bold mb-6">Relatórios</h2><div class="stat-card p-6">Análise de vendas</div></div>
-            <div id="configuracoes" class="secao">
-                <h2 class="text-2xl font-bold mb-6">Configurações da Loja</h2>
-                <div class="stat-card p-6 space-y-4">
-                    <div>
-                        <label class="block text-sm mb-2">Logo da Loja</label>
-                        <input type="file" id="logo_loja" accept="image/*" class="w-full bg-dark border border-grayMid rounded p-2" onchange="alterarLogo()">
-                        <img id="preview_logo" src="https://i.imgur.com/7ZbKQxH.png" class="w-24 h-24 object-contain mt-3 rounded border border-grayMid" alt="Logo">
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-2">Banner Principal</label>
-                        <input type="file" id="banner_loja" accept="image/*" class="w-full bg-dark border border-grayMid rounded p-2" onchange="alterarBanner()">
-                        <img id="preview_banner" src="https://i.imgur.com/9wQZ8fL.jpg" class="banner-loja mt-3" alt="Banner">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm mb-2">Chave Pix</label>
-                            <input type="text" id="chave_pix" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="ex: 86999999999">
-                        </div>
-                        <div>
-                            <label class="block text-sm mb-2">Nome da conta Pix</label>
-                            <input type="text" id="nome_pix" class="w-full bg-dark border border-grayMid rounded p-2" placeholder="Nome completo">
-                        </div>
-                    </div>
-                    <button onclick="salvarConfiguracoes()" class="btn-primary px-6 py-2">Salvar Alterações</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6 text-center text-sm text-textMuted">
-                    <div><i class="fa fa-mobile text-primary text-xl mb-2"></i><p>100% responsivo<br>Funciona em todos os dispositivos</p></div>
-                    <div><i class="fa fa-paint-brush text-primary text-xl mb-2"></i><p>Personalizável<br>Cores, logo, banner e muito mais</p></div>
-                    <div><i class="fa fa-check-circle text-primary text-xl mb-2"></i><p>Fácil de usar<br>Interface intuitiva e moderna</p></div>
-                    <div><i class="fa fa-lock text-primary text-xl mb-2"></i><p>Seguro<br>Seus dados sempre protegidos</p></div>
-                </div>
-            </div>
+            <div id="produtos" class="secao"><h2 class="text-2xl font-bold mb-6">Meus Produtos</h2><div class="stat-card p-6">Cadastre e gerencie seus produtos aqui</div></div>
+            <div id="bairros" class="secao"><h2 class="text-2xl font-bold mb-6">Bairros e Taxas</h2><div class="stat-card p-6">Defina o valor da entrega por região</div></div>
+            <div id="configuracoes" class="secao"><h2 class="text-2xl font-bold mb-6">Dados da Loja</h2><div class="stat-card p-6">Atualize WhatsApp, Pix e informações gerais</div></div>
+            <div id="categorias" class="secao"><h2 class="text-2xl font-bold mb-6">Categorias</h2><div class="stat-card p-6">Organize seus produtos</div></div>
         </main>
     </div>
 </section>
 
-<!-- ABA: CARDÁPIO PARA CLIENTE -->
-<section id="cardapio_cliente" class="aba max-w-5xl mx-auto">
-    <div id="tela_cardapio" class="mb-8">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold">MENUFLEX</h2>
-            <div class="flex gap-2">
-                <i class="fa fa-search"></i>
-                <i class="fa fa-shopping-cart"></i>
-            </div>
-        </div>
-        <img id="banner_cliente" src="https://i.imgur.com/9wQZ8fL.jpg" class="banner-loja w-full mb-6" alt="Banner da Loja">
-        <div class="flex gap-3 overflow-x-auto pb-4 mb-6">
-            <button class="categoria categoria-ativa">Smash Burgers</button>
-            <button class="categoria">Artesanais</button>
-            <button class="categoria">Combos</button>
-            <button class="categoria">Bebidas</button>
-            <button class="categoria">Acompanhamentos</button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="stat-card p-4 relative">
-                <span class="badge-promo">MAIS PEDIDO</span>
-                <img src="https://i.imgur.com/5XqQ7yY.jpg" class="img-produto mb-3" alt="Smash Clássico">
-                <h3 class="font-bold text-lg">Smash Clássico</h3>
-                <p class="text-xs text-textMuted mb-2">Pão, carne, queijo, cebola roxa, picles, molho especial</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-accent font-bold">R$ 16,90</span>
-                    <button onclick="adicionarAoCarrinho('Smash Clássico', 16.90)" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xl">+</button>
+<!-- ✅ ÁREA DO CLIENTE - EXCLUSIVA PARA CADA LOJA -->
+<section id="cardapio_cliente" class="aba">
+    <div class="cliente-container">
+        <!-- TELA 1: CARDÁPIO -->
+        <div id="tela_cardapio">
+            <div class="flex justify-between items-center p-4">
+                <h1 class="text-xl font-bold" id="nome_loja_cliente">Tempo Burguer</h1>
+                <div class="flex gap-4">
+                    <i class="fa fa-search text-lg"></i>
+                    <i class="fa fa-shopping-cart text-lg"></i>
                 </div>
             </div>
-            <div class="stat-card p-4 relative">
-                <span class="badge-promo">MAIS PEDIDO</span>
-                <img src="https://i.imgur.com/6LkR9tZ.jpg" class="img-produto mb-3" alt="Smash Bacon">
-                <h3 class="font-bold text-lg">Smash Bacon</h3>
-                <p class="text-xs text-textMuted mb-2">Pão, carne, queijo, bacon, cebola, molho especial</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-accent font-bold">R$ 18,90</span>
-                    <button onclick="adicionarAoCarrinho('Smash Bacon', 18.90)" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xl">+</button>
-                </div>
-            </div>
-            <div class="stat-card p-4">
-                <img src="https://i.imgur.com/8M7sVnK.jpg" class="img-produto mb-3" alt="Smash Duplo">
-                <h3 class="font-bold text-lg">Smash Duplo</h3>
-                <p class="text-xs text-textMuted mb-2">2 carnes, queijo, cebola, picles, molho especial</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-accent font-bold">R$ 22,90</span>
-                    <button onclick="adicionarAoCarrinho('Smash Duplo', 22.90)" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xl">+</button>
-                </div>
-            </div>
-        </div>
-        <button onclick="abrirCarrinho()" class="w-full btn-primary py-3 text-lg font-bold">Meu Pedido <span id="contador_itens" class="bg-white text-primary rounded-full px-2 text-sm ml-2">0</span></button>
-    </div>
 
-    <div id="tela_carrinho" class="hidden">
-        <div class="flex justify-between items-center mb-6">
-            <button onclick="voltarCardapio()"><i class="fa fa-arrow-left"></i></button>
-            <h2 class="text-xl font-bold">Meu Pedido</h2>
-            <button><i class="fa fa-trash"></i></button>
-        </div>
-        <div id="lista_itens_carrinho" class="space-y-4 mb-6"></div>
-        <div class="pedido-card p-4 mb-6">
-            <div class="flex justify-between items-center mb-2">
-                <span>Subtotal</span>
-                <span id="valor_subtotal">R$ 0,00</span>
+            <div class="banner-cliente mb-4">
+                <img id="banner_cliente" src="https://i.imgur.com/9wQZ8fL.jpg" alt="Banner da Loja">
             </div>
-            <div class="flex justify-between items-center mb-4">
-                <span>Entrega</span>
-                <select id="bairro_entrega" class="bg-graySoft border border-grayMid rounded p-1">
-                    <option value="5.00">Promorar - R$ 5,00</option>
-                    <option value="6.00">Bela Vista - R$ 6,00</option>
-                    <option value="8.00">Centro - R$ 8,00</option>
-                </select>
-            </div>
-            <div class="flex justify-between items-center text-xl font-bold border-t border-grayMid pt-4">
-                <span>Total</span>
-                <span id="valor_total" class="text-primary">R$ 0,00</span>
-            </div>
-        </div>
-        <button onclick="abrirTelaPix()" class="w-full btn-primary py-3 text-lg font-bold">Finalizar Pedido</button>
-    </div>
 
-    <div id="tela_pix" class="hidden">
-        <div class="check-circle">✓</div>
-        <h2 class="text-2xl font-bold text-center mb-2">Pedido Recebido</h2>
-        <p class="text-center text-textMuted mb-6">Em instantes você será atendido.</p>
-        <div class="pix-card mb-6">
-            <h3 class="text-xl font-bold mb-4">Pagamento via Pix</h3>
-            <p class="mb-4">Chave Pix:</p>
-            <div class="bg-white/20 p-3 rounded mb-4 break-all" id="chave_pix_mostrar">86999999999</div>
-            <p class="text-sm mb-2">Favorecido: <span id="nome_pix_mostrar">Sua Loja LTDA</span></p>
-            <p class="text-xl font-bold mb-6">Valor: <span id="valor_pix">R$ 0,00</span></p>
-            <button onclick="copiarChavePix()" class="w-full bg-accent text-black font-bold py-3 rounded-lg">Copiar chave Pix</button>
+            <div class="px-4">
+                <div class="categoria-scroll mb-6">
+                    <button class="categoria categoria-ativa">Smash Burgers</button>
+                    <button class="categoria">Artesanais</button>
+                    <button class="categoria">Combos</button>
+                    <button class="categoria">Bebidas</button>
+                    <button class="categoria">Acompanhamentos</button>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4">Smash Burgers</h3>
+                <div class="grid grid-cols-2 gap-4 mb-20">
+                    <div class="produto-card">
+                        <span class="badge-promo">MAIS PEDIDO</span>
+                        <img src="https://i.imgur.com/5XqQ7yY.jpg" class="w-full h-32 object-cover rounded mb-3" alt="Smash Clássico">
+                        <h4 class="font-bold text-sm">Smash Clássico</h4>
+                        <p class="text-xs text-gray-400 mb-2">Pão, carne, queijo, cebola, picles, molho especial</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent font-bold">R$ 16,90</span>
+                            <button onclick="adicionarAoCarrinho('Smash Clássico', 16.90)" class="qtd-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="produto-card">
+                        <span class="badge-promo">MAIS PEDIDO</span>
+                        <img src="https://i.imgur.com/6LkR9tZ.jpg" class="w-full h-32 object-cover rounded mb-3" alt="Smash Bacon">
+                        <h4 class="font-bold text-sm">Smash Bacon</h4>
+                        <p class="text-xs text-gray-400 mb-2">Pão, carne, queijo, bacon, cebola, molho especial</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent font-bold">R$ 18,90</span>
+                            <button onclick="adicionarAoCarrinho('Smash Bacon', 18.90)" class="qtd-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="produto-card">
+                        <img src="https://i.imgur.com/8M7sVnK.jpg" class="w-full h-32 object-cover rounded mb-3" alt="Smash Duplo">
+                        <h4 class="font-bold text-sm">Smash Duplo</h4>
+                        <p class="text-xs text-gray-400 mb-2">2 carnes, queijo, cebola, picles, molho especial</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent font-bold">R$ 22,90</span>
+                            <button onclick="adicionarAoCarrinho('Smash Duplo', 22.90)" class="qtd-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="produto-card">
+                        <img src="https://i.imgur.com/CocaCola.jpg" class="w-full h-32 object-cover rounded mb-3" alt="Coca-Cola 2L">
+                        <h4 class="font-bold text-sm">Coca-Cola 2L</h4>
+                        <p class="text-xs text-gray-400 mb-2">Refrigerante de 2 litros</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent font-bold">R$ 12,00</span>
+                            <button onclick="adicionarAoCarrinho('Coca-Cola 2L', 12.00)" class="qtd-btn">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carrinho-barra">
+                <div>
+                    <span class="text-sm">Total: <span id="valor_total_carrinho">R$ 0,00</span></span>
+                    <span class="text-xs text-gray-400 ml-2" id="contador_itens">0 itens</span>
+                </div>
+                <button onclick="abrirTelaPedido()" class="btn-primary px-6 py-2 rounded">Ver Pedido</button>
+            </div>
         </div>
-        <button onclick="voltarCardapio()" class="w-full bg-grayMid py-3 rounded-lg">Voltar para o início</button>
+
+        <!-- TELA 2: RESUMO DO PEDIDO -->
+        <div id="tela_resumo" class="tela-pedido hidden">
+            <div class="p-4 flex justify-between items-center border-b border-gray-800">
+                <button onclick="voltarParaCardapio()"><i class="fa fa-arrow-left text-lg"></i></button>
+                <h2 class="font-bold text-lg">Meu Pedido</h2>
+                <button><i class="fa fa-trash-o text-lg"></i></button>
+            </div>
+            <div class="p-4">
+                <div id="lista_itens_resumo" class="space-y-4 mb-6"></div>
+                <div class="bg-gray-900 p-4 rounded-xl mb-4">
+                    <div class="flex justify-between mb-2">
+                        <span>Subtotal</span>
+                        <span id="subtotal_resumo">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span>Entrega</span>
+                        <select id="bairro_entrega" class="bg-gray-800 border border-gray-700 rounded p-1 w-1/2">
+                            <option value="5.00">Promorar - R$ 5,00</option>
+                            <option value="6.00">Bela Vista - R$ 6,00</option>
+                            <option value="8.00">Centro - R$ 8,00</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between text-xl font-bold pt-3 border-t border-gray-700">
+                        <span>Total</span>
+                        <span id="total_resumo" class="text-primary">R$ 0,00</span>
+                    </div>
+                </div>
+                <button onclick="finalizarPedido()" class="w-full btn-primary py-3 rounded-lg text-lg font-semibold">Finalizar Pedido</button>
+            </div>
+        </div>
+
+        <!-- TELA 3: SUCESSO E PIX -->
+        <div id="tela_sucesso" class="tela-pedido hidden">
+            <div class="sucesso-box">
+                <div class="check-circle">✓</div>
+                <h2 class="text-2xl font-bold mb-2">Pedido Enviado!</h2>
+                <p class="text-gray-400 mb-6">Seu pedido foi enviado para a loja. Em instantes você receberá a confirmação no WhatsApp.</p>
+
+                <div class="bg-gray-900 p-5 rounded-xl mb-6 text-left">
+                    <h3 class="font-bold mb-4 text-lg">Pagamento via Pix</h3>
+                    <p class="text-sm text-gray-400 mb-2">Para agilizar o preparo, realize o pagamento:</p>
+                    <div class="bg-gray-800 p-3 rounded mb-3 break-all" id="chave_pix_cliente">---</div>
+                    <p class="text-sm mb-1">Favorecido: <span id="nome_pix_cliente">---</span></p>
+                    <p class="text-sm mb-4">Valor: <span id="valor_pix_cliente" class="font-bold">R$ 0,00</span></p>
+                    <button onclick="copiarChavePix()" class="w-full bg-orange-500 text-black font-bold py-3 rounded-lg">Copiar chave Pix</button>
+                </div>
+
+                <button onclick="voltarParaCardapio()" class="w-full bg-gray-800 py-3 rounded-lg">Voltar para o início</button>
+            </div>
+        </div>
     </div>
 </section>
 
 </div>
 
 <script>
-// === DADOS GERAIS ===
-const SEU_WHATSAPP = "86999850573";
 let usuarioLogado = null;
 let carrinho = [];
 let baseUrl = window.location.origin + window.location.pathname;
 
-// === FUNÇÕES DE NAVEGAÇÃO ===
 function mostrarAba(nome) {
     document.querySelectorAll('.aba').forEach(aba => aba.classList.remove('ativa'));
     document.getElementById(nome).classList.add('ativa');
@@ -536,29 +427,32 @@ function irParaCadastro(plano) {
     mostrarAba('cadastro');
 }
 
-// === CADASTRO E LOGIN ===
 function salvarCadastro() {
     const nome = document.getElementById('cad_nome').value.trim();
     const email = document.getElementById('cad_email').value.trim();
     const senha = document.getElementById('cad_senha').value.trim();
-    const telefone = document.getElementById('cad_telefone').value.trim();
+    const telefone = document.getElementById('cad_telefone').value.trim().replace(/\D/g, '');
     const loja = document.getElementById('cad_loja').value.trim();
+    const chavePix = document.getElementById('cad_chavepix').value.trim() || telefone;
+    const nomePix = document.getElementById('cad_nomepix').value.trim() || loja;
     const plano = document.getElementById('plano_escolhido').value;
 
-    if(!nome || !email || !senha) return alert('Preencha todos os campos!');
+    if(!nome || !email || !senha || !telefone || !loja) {
+        return alert('Preencha todos os campos obrigatórios!');
+    }
 
     const usuario = {
         id: Date.now(),
         nome, email, senha, telefone, loja, plano,
-        logo: "https://i.imgur.com/7ZbKQxH.png",
         banner: "https://i.imgur.com/9wQZ8fL.jpg",
-        chavePix: "",
-        nomePix: "",
+        chavePix,
+        nomePix,
         produtos: [
             {nome:"Smash Clássico", desc:"Pão, carne, queijo, cebola roxa e picles", preco:16.90, img:"https://i.imgur.com/5XqQ7yY.jpg", categoria:"Smash Burgers"},
             {nome:"Smash Bacon", desc:"Pão, carne, queijo, bacon, molho especial", preco:18.90, img:"https://i.imgur.com/6LkR9tZ.jpg", categoria:"Smash Burgers"},
             {nome:"Smash Duplo", desc:"2 carnes, queijo, molho especial e picles", preco:22.90, img:"https://i.imgur.com/8M7sVnK.jpg", categoria:"Smash Burgers"},
-            {nome:"Coca-Cola 2L", desc:"Refrigerante 2 litros", preco:12.00, img:"https://i.imgur.com/9wQZ8fL.jpg", categoria:"Bebidas"}
+            {nome:"Coca-Cola 2L", desc:"Refrigerante 2 litros", preco:12.00, img:"https://i.imgur.com/CocaCola.jpg", categoria:"Bebidas"},
+            {nome:"Batata Frita", desc:"Porção de batata frita", preco:8.90, img:"https://i.imgur.com/BatataFrita.jpg", categoria:"Acompanhamentos"}
         ],
         bairros: [
             {nome:"Promorar", taxa:5.00},
@@ -568,7 +462,7 @@ function salvarCadastro() {
     };
 
     localStorage.setItem('usuario_'+email, JSON.stringify(usuario));
-    alert('Cadastro realizado! Faça login para acessar.');
+    alert('Loja cadastrada com sucesso! Faça login para acessar.');
     mostrarAba('login');
 }
 
@@ -576,7 +470,7 @@ function fazerLogin() {
     const email = document.getElementById('log_email').value.trim();
     const senha = document.getElementById('log_senha').value.trim();
     const dados = localStorage.getItem('usuario_'+email);
-    if(!dados) return alert('E-mail não encontrado!');
+    if(!dados) return alert('E-mail não cadastrado!');
 
     const usuario = JSON.parse(dados);
     if(usuario.senha !== senha) return alert('Senha incorreta!');
@@ -587,9 +481,17 @@ function fazerLogin() {
 }
 
 function atualizarPainel() {
-    // Adiciona os links no painel
-    if(document.getElementById('link_editar')) document.getElementById('link_editar').value = `${baseUrl}?id=${usuarioLogado.id}&modo=admin`;
-    if(document.getElementById('link_cliente')) document.getElementById('link_cliente').value = `${baseUrl}?id=${usuarioLogado.id}&modo=cliente`;
+    document.getElementById('nome_loja_painel').textContent = usuarioLogado.loja;
+    document.getElementById('link_admin').value = `${baseUrl}?id=${usuarioLogado.id}&modo=admin`;
+    document.getElementById('link_cliente').value = `${baseUrl}?id=${usuarioLogado.id}&modo=cliente`;
+}
+
+function copiarCampo(id) {
+    const campo = document.getElementById(id);
+    campo.select();
+    campo.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(campo.value);
+    alert('Copiado para a área de transferência!');
 }
 
 function sairConta() {
@@ -597,61 +499,89 @@ function sairConta() {
     mostrarAba('inicio');
 }
 
-// === CARRINHO E PEDIDOS ===
 function adicionarAoCarrinho(nome, preco) {
-    carrinho.push({nome, preco, qtd:1});
-    document.getElementById('contador_itens').textContent = carrinho.length;
-    atualizarResumo();
+    const item = carrinho.find(i => i.nome === nome);
+    if(item) {
+        item.qtd += 1;
+    } else {
+        carrinho.push({nome, preco, qtd:1});
+    }
+    atualizarCarrinho();
 }
 
-function atualizarResumo() {
+function atualizarCarrinho() {
     let subtotal = carrinho.reduce((s, i) => s + (i.preco * i.qtd), 0);
-    let entrega = parseFloat(document.getElementById('bairro_entrega')?.value || 0);
-    let total = subtotal + entrega;
-    document.getElementById('valor_subtotal').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-    document.getElementById('valor_total').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-    document.getElementById('valor_pix').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    document.getElementById('contador_itens').textContent = `${carrinho.length} itens`;
+    document.getElementById('valor_total_carrinho').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
 }
 
-function abrirCarrinho() {
+function abrirTelaPedido() {
+    if(carrinho.length === 0) return alert('Adicione pelo menos um item ao pedido!');
     document.getElementById('tela_cardapio').classList.add('hidden');
-    document.getElementById('tela_carrinho').classList.remove('hidden');
-    atualizarResumo();
+    document.getElementById('tela_resumo').classList.remove('hidden');
+    atualizarResumoPedido();
 }
 
-function voltarCardapio() {
-    document.getElementById('tela_carrinho').classList.add('hidden');
-    document.getElementById('tela_pix').classList.add('hidden');
+function atualizarResumoPedido() {
+    let subtotal = carrinho.reduce((s, i) => s + (i.preco * i.qtd), 0);
+    let entrega = parseFloat(document.getElementById('bairro_entrega').value);
+    let total = subtotal + entrega;
+
+    document.getElementById('subtotal_resumo').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+    document.getElementById('total_resumo').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    document.getElementById('valor_pix_cliente').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+
+    const lista = document.getElementById('lista_itens_resumo');
+    lista.innerHTML = '';
+    carrinho.forEach(item => {
+        lista.innerHTML += `
+        <div class="flex justify-between items-center mb-2">
+            <div>
+                <p class="font-medium">${item.nome}</p>
+                <p class="text-sm text-gray-400">${item.qtd}x R$ ${item.preco.toFixed(2).replace('.', ',')}</p>
+            </div>
+            <span>R$ ${(item.qtd * item.preco).toFixed(2).replace('.', ',')}</span>
+        </div>`;
+    });
+}
+
+function finalizarPedido() {
+    let subtotal = carrinho.reduce((s, i) => s + (i.preco * i.qtd), 0);
+    let entrega = parseFloat(document.getElementById('bairro_entrega').value);
+    let total = subtotal + entrega;
+    let bairro = document.getElementById('bairro_entrega').options[document.getElementById('bairro_entrega').selectedIndex].text;
+
+    let mensagem = `*Novo Pedido - ${usuarioLogado.loja}*\n\n`;
+    mensagem += `*Itens:*\n`;
+    carrinho.forEach(item => {
+        mensagem += `• ${item.qtd}x ${item.nome} - R$ ${(item.qtd * item.preco).toFixed(2).replace('.', ',')}\n`;
+    });
+    mensagem += `\n*Subtotal:* R$ ${subtotal.toFixed(2).replace('.', ',')}\n`;
+    mensagem += `*Entrega:* ${bairro}\n`;
+    mensagem += `*Total:* R$ ${total.toFixed(2).replace('.', ',')}\n`;
+
+    const linkWhatsApp = `https://wa.me/55${usuarioLogado.telefone}?text=${encodeURIComponent(mensagem)}`;
+    window.open(linkWhatsApp, '_blank');
+
+    document.getElementById('chave_pix_cliente').textContent = usuarioLogado.chavePix;
+    document.getElementById('nome_pix_cliente').textContent = usuarioLogado.nomePix;
+    document.getElementById('tela_resumo').classList.add('hidden');
+    document.getElementById('tela_sucesso').classList.remove('hidden');
+}
+
+function voltarParaCardapio() {
+    document.getElementById('tela_resumo').classList.add('hidden');
+    document.getElementById('tela_sucesso').classList.add('hidden');
     document.getElementById('tela_cardapio').classList.remove('hidden');
-}
-
-function abrirTelaPix() {
-    document.getElementById('chave_pix_mostrar').textContent = usuarioLogado?.chavePix || "Cadastre sua chave Pix";
-    document.getElementById('nome_pix_mostrar').textContent = usuarioLogado?.nomePix || "Cadastre o nome da conta";
-    document.getElementById('tela_carrinho').classList.add('hidden');
-    document.getElementById('tela_pix').classList.remove('hidden');
+    carrinho = [];
+    atualizarCarrinho();
 }
 
 function copiarChavePix() {
-    const chave = document.getElementById('chave_pix_mostrar').textContent;
+    const chave = document.getElementById('chave_pix_cliente').textContent;
     navigator.clipboard.writeText(chave);
     alert('Chave Pix copiada!');
 }
-
-// === CARREGAR CARDÁPIO PELO LINK ===
-window.onload = function() {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    const modo = params.get('modo');
-
-    if(id && modo === 'cliente') {
-        const usuario = encontrarUsuarioPorId(id);
-        if(usuario) {
-            usuarioLogado = usuario;
-            carregarCardapioCliente(usuario);
-        }
-    }
-};
 
 function encontrarUsuarioPorId(id) {
     const chaves = Object.keys(localStorage);
@@ -665,8 +595,29 @@ function encontrarUsuarioPorId(id) {
 }
 
 function carregarCardapioCliente(usuario) {
+    usuarioLogado = usuario;
+    document.getElementById('nome_loja_cliente').textContent = usuario.loja;
     document.getElementById('banner_cliente').src = usuario.banner;
     mostrarAba('cardapio_cliente');
+}
+
+window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const modo = params.get('modo');
+
+    if(id && modo) {
+        const usuario = encontrarUsuarioPorId(id);
+        if(usuario) {
+            usuarioLogado = usuario;
+            if(modo === 'admin') {
+                mostrarAba('painel');
+                atualizarPainel();
+            } else if(modo === 'cliente') {
+                carregarCardapioCliente(usuario);
+            }
+        }
+    }
 }
 </script>
 
