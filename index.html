@@ -6,7 +6,6 @@
     <title>MenuFlex - Cardápio Digital Profissional</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
     <script>
@@ -28,10 +27,7 @@
                         info: '#3B82F6'
                     },
                     fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-                    boxShadow: {
-                        premium: '0 8px 32px rgba(109, 40, 217, 0.25)',
-                        glass: '0 4px 24px rgba(0,0,0,0.2)'
-                    },
+                    boxShadow: { premium: '0 8px 32px rgba(109, 40, 217, 0.25)', glass: '0 4px 24px rgba(0,0,0,0.2)' },
                     backdropBlur: { sm: '4px', md: '8px', lg: '12px' }
                 }
             }
@@ -156,6 +152,10 @@
                 <input type="text" id="cad_nomeLoja" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
             </div>
             <div>
+                <label class="block text-sm mb-1 text-gray-300">Nome do Responsável</label>
+                <input type="text" id="cad_responsavel" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+            </div>
+            <div>
                 <label class="block text-sm mb-1 text-gray-300">WhatsApp</label>
                 <input type="tel" id="cad_whatsapp" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="(86) 99999-9999" required>
             </div>
@@ -204,7 +204,7 @@
     </div>
 </section>
 
-<!-- ============================== PAINEL ADMINISTRATIVO COMPLETO ============================== -->
+<!-- ============================== PAINEL ADMINISTRATIVO ============================== -->
 <section id="painel" class="aba min-h-screen flex">
     <!-- Menu Lateral -->
     <aside id="sidebar" class="sidebar fechada md:fechada">
@@ -228,7 +228,7 @@
             <button onclick="mostrarSecao('configuracoes', this)" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
                 <i class="fa fa-cog w-6 text-center"></i> Configurações
             </button>
-            <button onclick="verCardapio()" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
+            <button onclick="abrirCardapio()" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
                 <i class="fa fa-external-link w-6 text-center"></i> Ver Cardápio
             </button>
             <button onclick="sairConta()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-500/20 text-red-400 transition mt-8">
@@ -241,7 +241,7 @@
     <div id="conteudoPrincipal" class="conteudo-principal expandido">
         <header class="glassmorphism p-4 sticky top-0 z-40 flex justify-between items-center">
             <button class="md:hidden text-xl" onclick="abrirSidebar()"><i class="fa fa-bars"></i></button>
-            <h4 class="text-lg font-semibold">Painel Administrativo</h4>
+            <h4 id="nomeLojaTopo" class="text-lg font-semibold">Minha Loja</h4>
             <div class="hidden md:flex items-center gap-2">
                 <span class="text-sm text-gray-300">Sessão ativa</span>
             </div>
@@ -262,11 +262,11 @@
                     </div>
                     <div class="glassmorphism p-5 rounded-xl hover:shadow-premium transition-shadow">
                         <p class="text-gray-300 text-sm">Produtos Cadastrados</p>
-                        <h3 class="text-3xl font-bold mt-2 text-info">0</h3>
+                        <h3 id="qtdProdutos" class="text-3xl font-bold mt-2 text-info">0</h3>
                     </div>
                     <div class="glassmorphism p-5 rounded-xl hover:shadow-premium transition-shadow">
-                        <p class="text-gray-300 text-sm">Visualizações</p>
-                        <h3 class="text-3xl font-bold mt-2 text-success">0</h3>
+                        <p class="text-gray-300 text-sm">Categorias</p>
+                        <h3 id="qtdCategorias" class="text-3xl font-bold mt-2 text-success">0</h3>
                     </div>
                 </div>
                 <div class="glassmorphism p-5 rounded-xl">
@@ -289,11 +289,13 @@
                     </button>
                 </div>
                 <div class="glassmorphism p-4 rounded-xl">
-                    <input type="text" placeholder="Buscar produto pelo nome..." class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder mb-4">
-                    <div class="text-center py-10 text-gray-400">
-                        <i class="fa fa-cutlery text-4xl mb-3"></i>
-                        <p>Nenhum produto cadastrado ainda.</p>
-                        <p class="text-sm">Clique em "Novo Produto" para começar.</p>
+                    <input type="text" id="buscarProduto" placeholder="Buscar produto pelo nome..." class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder mb-4" oninput="filtrarProdutos()">
+                    <div id="listaProdutos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="col-span-full text-center py-10 text-gray-400">
+                            <i class="fa fa-cutlery text-4xl mb-3"></i>
+                            <p>Nenhum produto cadastrado ainda.</p>
+                            <p class="text-sm">Clique em "Novo Produto" para começar.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -307,10 +309,12 @@
                     </button>
                 </div>
                 <div class="glassmorphism p-4 rounded-xl">
-                    <div class="text-center py-10 text-gray-400">
-                        <i class="fa fa-th-large text-4xl mb-3"></i>
-                        <p>Nenhuma categoria cadastrada.</p>
-                        <p class="text-sm">Ex: Bebidas, Porções, Pratos Principais</p>
+                    <div id="listaCategorias" class="space-y-3">
+                        <div class="text-center py-10 text-gray-400">
+                            <i class="fa fa-th-large text-4xl mb-3"></i>
+                            <p>Nenhuma categoria cadastrada.</p>
+                            <p class="text-sm">Ex: Bebidas, Porções, Pratos Principais</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -334,22 +338,22 @@
                     <div class="grid md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm mb-2 text-gray-300">Nome da Loja</label>
-                            <input type="text" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="Ex: Pizzaria da Esquina">
+                            <input type="text" id="conf_nomeLoja" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="Ex: Pizzaria da Esquina">
                         </div>
                         <div>
                             <label class="block text-sm mb-2 text-gray-300">WhatsApp para Pedidos</label>
-                            <input type="tel" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="(86) 99999-9999">
+                            <input type="tel" id="conf_whatsapp" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="(86) 99999-9999">
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm mb-2 text-gray-300">Horário de Funcionamento</label>
-                        <textarea rows="2" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="Ex: Segunda a Sábado: 18h às 23h | Domingo: Fechado"></textarea>
+                        <textarea id="conf_horario" rows="2" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="Ex: Segunda a Sábado: 18h às 23h | Domingo: Fechado"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm mb-2 text-gray-300">Valor Mínimo do Pedido (R$)</label>
-                        <input type="number" step="0.01" min="0" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="0,00">
+                        <input type="number" step="0.01" min="0" id="conf_pedidoMinimo" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="0,00">
                     </div>
-                    <button onclick="mostrarToast('Configurações salvas com sucesso!', 'success')" class="px-6 py-3 rounded-lg bg-accent hover:bg-accent/90 font-semibold transition">Salvar Alterações</button>
+                    <button onclick="salvarConfiguracoes()" class="px-6 py-3 rounded-lg bg-accent hover:bg-accent/90 font-semibold transition">Salvar Alterações</button>
                 </div>
             </div>
         </main>
@@ -360,30 +364,30 @@
 <div id="modalProduto" class="tela-modal">
     <div class="modal-conteudo">
         <h3 class="text-xl font-bold mb-5">Cadastrar Produto</h3>
-        <form class="space-y-4">
+        <form id="formProduto" class="space-y-4">
             <div>
                 <label class="block text-sm mb-1 text-gray-300">Nome do Produto</label>
-                <input type="text" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+                <input type="text" id="prod_nome" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
             </div>
             <div>
                 <label class="block text-sm mb-1 text-gray-300">Descrição</label>
-                <textarea rows="2" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder"></textarea>
+                <textarea id="prod_desc" rows="2" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder"></textarea>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-sm mb-1 text-gray-300">Preço (R$)</label>
-                    <input type="number" step="0.01" min="0" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+                    <input type="number" step="0.01" min="0" id="prod_preco" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
                 </div>
                 <div>
                     <label class="block text-sm mb-1 text-gray-300">Categoria</label>
-                    <select class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
-                        <option value="">Selecione</option>
+                    <select id="prod_categoria" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+                        <option value="">Selecione uma categoria</option>
                     </select>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <input type="checkbox" id="disp" checked>
-                <label for="disp" class="text-sm">Produto disponível para venda</label>
+                <input type="checkbox" id="prod_disponivel" checked>
+                <label for="prod_disponivel" class="text-sm">Produto disponível para venda</label>
             </div>
             <button type="submit" class="w-full py-3 rounded-lg bg-primary hover:bg-primary/90 font-semibold mt-4">Salvar Produto</button>
         </form>
@@ -394,10 +398,10 @@
 <div id="modalCategoria" class="tela-modal">
     <div class="modal-conteudo">
         <h3 class="text-xl font-bold mb-5">Nova Categoria</h3>
-        <form class="space-y-4">
+        <form id="formCategoria" class="space-y-4">
             <div>
                 <label class="block text-sm mb-1 text-gray-300">Nome da Categoria</label>
-                <input type="text" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+                <input type="text" id="cat_nome" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
             </div>
             <button type="submit" class="w-full py-3 rounded-lg bg-primary hover:bg-primary/90 font-semibold mt-4">Salvar</button>
         </form>
@@ -405,16 +409,15 @@
     </div>
 </div>
 
-<!-- ============================== SCRIPT COMPLETO ============================== -->
+<!-- ============================== SCRIPT FUNCIONAL ============================== -->
 <script>
-// Navegação entre telas
+// ====== FUNÇÕES GERAIS ======
 function mostrarAba(id) {
     document.querySelectorAll('.aba').forEach(aba => aba.classList.remove('ativa'));
     document.getElementById(id).classList.add('ativa');
     window.scrollTo(0, 0);
 }
 
-// Navegação entre seções do painel
 function mostrarSecao(id, botao) {
     document.querySelectorAll('.secao').forEach(sec => sec.classList.remove('ativa'));
     document.getElementById(id).classList.add('ativa');
@@ -422,40 +425,254 @@ function mostrarSecao(id, botao) {
     if (botao) botao.classList.add('menu-ativo');
 }
 
-// Controles de menu
 function abrirMenuMobile() { document.getElementById('menuMobile').style.display = 'flex'; }
 function fecharMenuMobile() { document.getElementById('menuMobile').style.display = 'none'; }
 function abrirSidebar() { document.getElementById('sidebar').classList.add('ativa'); }
 function fecharSidebar() { document.getElementById('sidebar').classList.remove('ativa'); }
 
-// Modais
 function abrirModal(id) { document.getElementById(id).classList.add('ativa'); }
 function fecharModal(id) { document.getElementById(id).classList.remove('ativa'); }
 
-// Outras funções
-function verCardapio() { mostrarToast('Funcionalidade em desenvolvimento!', 'info'); }
-function sairConta() { mostrarAba('landing'); mostrarToast('Desconectado com sucesso!', 'success'); }
-
-// Notificações
-function mostrarToast(mensagem, tipo = '') {
+function mostrarToast(mensagem, tipo = 'info') {
     const t = document.getElementById('toast');
     t.textContent = mensagem;
-    t.className = 'toast ativa ' + tipo;
+    t.className = `toast ativa ${tipo}`;
     setTimeout(() => t.classList.remove('ativa'), 3000);
 }
 
-// Formulários
-document.getElementById('formCadastro').addEventListener('submit', e => {
+// ====== SALVAR E CARREGAR DADOS ======
+function salvarDados() {
+    const dados = {
+        loja: JSON.parse(localStorage.getItem('dadosLoja')) || {},
+        categorias: JSON.parse(localStorage.getItem('categorias')) || [],
+        produtos: JSON.parse(localStorage.getItem('produtos')) || []
+    };
+    localStorage.setItem('dadosLoja', JSON.stringify(dados.loja));
+    localStorage.setItem('categorias', JSON.stringify(dados.categorias));
+    localStorage.setItem('produtos', JSON.stringify(dados.produtos));
+    atualizarTela();
+}
+
+function carregarDados() {
+    const loja = JSON.parse(localStorage.getItem('dadosLoja')) || {};
+    document.getElementById('nomeLojaTopo').textContent = loja.nome || 'Minha Loja';
+    document.getElementById('conf_nomeLoja').value = loja.nome || '';
+    document.getElementById('conf_whatsapp').value = loja.whatsapp || '';
+    document.getElementById('conf_horario').value = loja.horario || '';
+    document.getElementById('conf_pedidoMinimo').value = loja.pedidoMinimo || '';
+    atualizarTela();
+}
+
+function atualizarTela() {
+    const categorias = JSON.parse(localStorage.getItem('categorias')) || [];
+    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+    
+    document.getElementById('qtdCategorias').textContent = categorias.length;
+    document.getElementById('qtdProdutos').textContent = produtos.length;
+
+    atualizarListaCategorias();
+    atualizarListaProdutos();
+    atualizarSelectCategorias();
+}
+
+// ====== CADASTRAR CATEGORIAS ======
+document.getElementById('formCategoria').addEventListener('submit', function(e) {
     e.preventDefault();
-    mostrarToast('Conta criada com sucesso!', 'success');
-    mostrarAba('painel');
+    const nome = document.getElementById('cat_nome').value.trim();
+    if (!nome) return;
+
+    const categorias = JSON.parse(localStorage.getItem('categorias')) || [];
+    categorias.push({ id: Date.now(), nome: nome });
+    localStorage.setItem('categorias', JSON.stringify(categorias));
+
+    document.getElementById('cat_nome').value = '';
+    fecharModal('modalCategoria');
+    mostrarToast('Categoria cadastrada com sucesso!', 'success');
+    atualizarTela();
 });
 
-document.getElementById('formLogin').addEventListener('submit', e => {
+function atualizarListaCategorias() {
+    const lista = document.getElementById('listaCategorias');
+    const categorias = JSON.parse(localStorage.getItem('categorias')) || [];
+    if (categorias.length === 0) {
+        lista.innerHTML = `
+            <div class="text-center py-10 text-gray-400">
+                <i class="fa fa-th-large text-4xl mb-3"></i>
+                <p>Nenhuma categoria cadastrada.</p>
+                <p class="text-sm">Ex: Bebidas, Porções, Pratos Principais</p>
+            </div>`;
+        return;
+    }
+    lista.innerHTML = categorias.map(cat => `
+        <div class="glassmorphism p-4 rounded-lg flex justify-between items-center">
+            <span class="font-medium">${cat.nome}</span>
+            <button onclick="excluirCategoria(${cat.id})" class="text-red-400 hover:text-red-300"><i class="fa fa-trash"></i></button>
+        </div>`).join('');
+}
+
+function atualizarSelectCategorias() {
+    const select = document.getElementById('prod_categoria');
+    const categorias = JSON.parse(localStorage.getItem('categorias')) || [];
+    select.innerHTML = '<option value="">Selecione uma categoria</option>';
+    categorias.forEach(cat => {
+        select.innerHTML += `<option value="${cat.id}">${cat.nome}</option>`;
+    });
+}
+
+function excluirCategoria(id) {
+    if (!confirm('Deseja excluir esta categoria?')) return;
+    const categorias = JSON.parse(localStorage.getItem('categorias')) || [];
+    const novas = categorias.filter(c => c.id !== id);
+    localStorage.setItem('categorias', JSON.stringify(novas));
+    mostrarToast('Categoria excluída!', 'info');
+    atualizarTela();
+}
+
+// ====== CADASTRAR PRODUTOS ======
+document.getElementById('formProduto').addEventListener('submit', function(e) {
     e.preventDefault();
-    mostrarToast('Login realizado com sucesso!', 'success');
-    mostrarAba('painel');
+    const nome = document.getElementById('prod_nome').value.trim();
+    const desc = document.getElementById('prod_desc').value.trim();
+    const preco = parseFloat(document.getElementById('prod_preco').value);
+    const categoria = parseInt(document.getElementById('prod_categoria').value);
+    const disponivel = document.getElementById('prod_disponivel').checked;
+
+    if (!nome || isNaN(preco) || !categoria) return;
+
+    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+    produtos.push({
+        id: Date.now(),
+        nome: nome,
+        descricao: desc,
+        preco: preco,
+        categoriaId: categoria,
+        disponivel: disponivel
+    });
+    localStorage.setItem('produtos', JSON.stringify(produtos));
+
+    document.getElementById('formProduto').reset();
+    fecharModal('modalProduto');
+    mostrarToast('Produto cadastrado com sucesso!', 'success');
+    atualizarTela();
 });
+
+function atualizarListaProdutos() {
+    const lista = document.getElementById('listaProdutos');
+    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+    const categorias = JSON.parse(localStorage.getItem('categorias')) || [];
+    
+    if (produtos.length === 0) {
+        lista.innerHTML = `
+            <div class="col-span-full text-center py-10 text-gray-400">
+                <i class="fa fa-cutlery text-4xl mb-3"></i>
+                <p>Nenhum produto cadastrado ainda.</p>
+                <p class="text-sm">Clique em "Novo Produto" para começar.</p>
+            </div>`;
+        return;
+    }
+
+    lista.innerHTML = produtos.map(prod => {
+        const cat = categorias.find(c => c.id === prod.categoriaId) || { nome: 'Sem categoria' };
+        return `
+        <div class="glassmorphism p-4 rounded-xl hover:shadow-premium transition-shadow">
+            <h4 class="font-semibold text-lg mb-2">${prod.nome}</h4>
+            <p class="text-gray-300 text-sm mb-2">${prod.descricao || 'Sem descrição'}</p>
+            <p class="text-sm text-gray-400 mb-2">Categoria: ${cat.nome}</p>
+            <p class="text-xl font-bold text-accent mb-3">R$ ${prod.preco.toFixed(2).replace('.', ',')}</p>
+            <div class="flex justify-between items-center">
+                <span class="text-sm ${prod.disponivel ? 'text-success' : 'text-danger'}">
+                    ${prod.disponivel ? 'Disponível' : 'Indisponível'}
+                </span>
+                <button onclick="excluirProduto(${prod.id})" class="text-red-400 hover:text-red-300">
+                    <i class="fa fa-trash"></i> Excluir
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function filtrarProdutos() {
+    const termo = document.getElementById('buscarProduto').value.toLowerCase();
+    const cards = document.querySelectorAll('#listaProdutos > div');
+    cards.forEach(card => {
+        const nome = card.querySelector('h4')?.textContent.toLowerCase() || '';
+        card.style.display = nome.includes(termo) ? '' : 'none';
+    });
+}
+
+function excluirProduto(id) {
+    if (!confirm('Deseja excluir este produto?')) return;
+    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+    const novos = produtos.filter(p => p.id !== id);
+    localStorage.setItem('produtos', JSON.stringify(novos));
+    mostrarToast('Produto excluído!', 'info');
+    atualizarTela();
+}
+
+// ====== SALVAR CONFIGURAÇÕES ======
+function salvarConfiguracoes() {
+    const loja = {
+        nome: document.getElementById('conf_nomeLoja').value.trim(),
+        whatsapp: document.getElementById('conf_whatsapp').value.trim(),
+        horario: document.getElementById('conf_horario').value.trim(),
+        pedidoMinimo: document.getElementById('conf_pedidoMinimo').value || '0'
+    };
+    localStorage.setItem('dadosLoja', JSON.stringify(loja));
+    document.getElementById('nomeLojaTopo').textContent = loja.nome || 'Minha Loja';
+    mostrarToast('Configurações salvas com sucesso!', 'success');
+}
+
+// ====== ENVIAR CADASTRO PARA WHATSAPP ======
+document.getElementById('formCadastro').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const nomeLoja = document.getElementById('cad_nomeLoja').value.trim();
+    const responsavel = document.getElementById('cad_responsavel').value.trim();
+    const whatsapp = document.getElementById('cad_whatsapp').value.trim();
+    const email = document.getElementById('cad_email').value.trim();
+    const senha = document.getElementById('cad_senha').value.trim();
+
+    // Salva os dados da loja
+    const dadosLoja = { nome: nomeLoja, whatsapp: whatsapp, email: email, senha: senha };
+    localStorage.setItem('dadosLoja', JSON.stringify(dadosLoja));
+
+    // Envia mensagem formatada para o WhatsApp da loja
+    const mensagem = `*NOVA LOJA CADASTRADA NO MENUFLEX*%0A%0A🏪 *Nome da Loja:* ${nomeLoja}%0A👤 *Responsável:* ${responsavel}%0A📞 *WhatsApp:* ${whatsapp}%0A📧 *E-mail:* ${email}`;
+    const link = `https://wa.me/55${whatsapp.replace(/\D/g, '')}?text=${mensagem}`;
+    window.open(link, '_blank');
+
+    mostrarToast('Conta criada com sucesso!', 'success');
+    mostrarAba('painel');
+    carregarDados();
+});
+
+// ====== LOGIN ======
+document.getElementById('formLogin').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('login_email').value.trim();
+    const senha = document.getElementById('login_senha').value.trim();
+    const loja = JSON.parse(localStorage.getItem('dadosLoja')) || {};
+
+    if (loja.email === email && loja.senha === senha) {
+        mostrarToast('Login realizado com sucesso!', 'success');
+        mostrarAba('painel');
+        carregarDados();
+    } else {
+        mostrarToast('E-mail ou senha incorretos!', 'danger');
+    }
+});
+
+// ====== OUTRAS FUNÇÕES ======
+function abrirCardapio() {
+    mostrarToast('Funcionalidade do cardápio em desenvolvimento!', 'info');
+}
+
+function sairConta() {
+    mostrarAba('landing');
+    mostrarToast('Desconectado com sucesso!', 'success');
+}
+
+// Carrega dados ao abrir a página
+window.onload = carregarDados;
 
 // Fechar menu lateral ao clicar fora em telas pequenas
 document.addEventListener('click', e => {
