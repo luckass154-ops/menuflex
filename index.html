@@ -43,6 +43,7 @@
             .glassmorphism { background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.12); }
             .animate-fade { animation: fadeIn 0.3s ease-out; }
             @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            .img-produto { width: 100%; height: 160px; object-fit: cover; border-radius: 0.5rem; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; }
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -365,6 +366,14 @@
     <div class="modal-conteudo">
         <h3 class="text-xl font-bold mb-5">Cadastrar Produto</h3>
         <form id="formProduto" class="space-y-4">
+            <!-- CAMPO DE FOTO ADICIONADO -->
+            <div>
+                <label class="block text-sm mb-1 text-gray-300">Foto do Produto</label>
+                <input type="file" id="prod_foto" accept="image/*" class="w-full p-2 rounded-lg bg-white/10 border border-glassBorder file:mr-2 file:py-1 file:px-2 file:rounded file:bg-primary file:border-0 file:text-white">
+                <div id="previewFoto" class="img-produto mt-2">
+                    <i class="fa fa-image text-3xl text-gray-500"></i>
+                </div>
+            </div>
             <div>
                 <label class="block text-sm mb-1 text-gray-300">Nome do Produto</label>
                 <input type="text" id="prod_nome" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
@@ -409,7 +418,18 @@
     </div>
 </div>
 
-<!-- ============================== SCRIPT FUNCIONAL ============================== -->
+<!-- ============================== CARDÁPIO PÚBLICO ============================== -->
+<section id="cardapioPublico" class="aba min-h-screen bg-blackDeep">
+    <header class="glassmorphism p-4 sticky top-0 z-40 text-center">
+        <h2 id="nomeLojaCardapio" class="text-xl font-bold">Nome da Loja</h2>
+        <p id="horarioCardapio" class="text-sm text-gray-300 mt-1">Horário de funcionamento</p>
+    </header>
+    <div class="p-4">
+        <div id="conteudoCardapio"></div>
+    </div>
+</section>
+
+<!-- ============================== SCRIPT ATUALIZADO ============================== -->
 <script>
 // ====== FUNÇÕES GERAIS ======
 function mostrarAba(id) {
@@ -431,7 +451,11 @@ function abrirSidebar() { document.getElementById('sidebar').classList.add('ativ
 function fecharSidebar() { document.getElementById('sidebar').classList.remove('ativa'); }
 
 function abrirModal(id) { document.getElementById(id).classList.add('ativa'); }
-function fecharModal(id) { document.getElementById(id).classList.remove('ativa'); }
+function fecharModal(id) { 
+    document.getElementById(id).classList.remove('ativa'); 
+    document.getElementById('previewFoto').innerHTML = '<i class="fa fa-image text-3xl text-gray-500"></i>';
+    document.getElementById('prod_foto').value = '';
+}
 
 function mostrarToast(mensagem, tipo = 'info') {
     const t = document.getElementById('toast');
@@ -439,6 +463,17 @@ function mostrarToast(mensagem, tipo = 'info') {
     t.className = `toast ativa ${tipo}`;
     setTimeout(() => t.classList.remove('ativa'), 3000);
 }
+
+// ====== PRÉ-VISUALIZAÇÃO DA FOTO ======
+document.getElementById('prod_foto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        document.getElementById('previewFoto').innerHTML = `<img src="${event.target.result}" class="w-full h-full object-cover rounded-lg" alt="Pré-visualização">`;
+    };
+    reader.readAsDataURL(file);
+});
 
 // ====== SALVAR E CARREGAR DADOS ======
 function salvarDados() {
@@ -473,6 +508,7 @@ function atualizarTela() {
     atualizarListaCategorias();
     atualizarListaProdutos();
     atualizarSelectCategorias();
+    atualizarCardapioPublico();
 }
 
 // ====== CADASTRAR CATEGORIAS ======
@@ -536,9 +572,24 @@ document.getElementById('formProduto').addEventListener('submit', function(e) {
     const preco = parseFloat(document.getElementById('prod_preco').value);
     const categoria = parseInt(document.getElementById('prod_categoria').value);
     const disponivel = document.getElementById('prod_disponivel').checked;
+    const fotoInput = document.getElementById('prod_foto');
+    let fotoBase64 = '';
 
     if (!nome || isNaN(preco) || !categoria) return;
 
+    if (fotoInput.files[0]) {
+        const reader = new FileReader();
+        reader.readAsDataURL(fotoInput.files[0]);
+        reader.onload = function() {
+            fotoBase64 = reader.result;
+            salvarProduto(nome, desc, preco, categoria, disponivel, fotoBase64);
+        };
+    } else {
+        salvarProduto(nome, desc, preco, categoria, disponivel, fotoBase64);
+    }
+});
+
+function salvarProduto(nome, desc, preco, categoria, disponivel, foto) {
     const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
     produtos.push({
         id: Date.now(),
@@ -546,7 +597,8 @@ document.getElementById('formProduto').addEventListener('submit', function(e) {
         descricao: desc,
         preco: preco,
         categoriaId: categoria,
-        disponivel: disponivel
+        disponivel: disponivel,
+        foto: foto
     });
     localStorage.setItem('produtos', JSON.stringify(produtos));
 
@@ -554,7 +606,7 @@ document.getElementById('formProduto').addEventListener('submit', function(e) {
     fecharModal('modalProduto');
     mostrarToast('Produto cadastrado com sucesso!', 'success');
     atualizarTela();
-});
+}
 
 function atualizarListaProdutos() {
     const lista = document.getElementById('listaProdutos');
@@ -573,8 +625,10 @@ function atualizarListaProdutos() {
 
     lista.innerHTML = produtos.map(prod => {
         const cat = categorias.find(c => c.id === prod.categoriaId) || { nome: 'Sem categoria' };
+        const imgFoto = prod.foto ? `<img src="${prod.foto}" class="w-full h-full object-cover rounded-lg" alt="${prod.nome}">` : `<i class="fa fa-image text-3xl text-gray-500"></i>`;
         return `
         <div class="glassmorphism p-4 rounded-xl hover:shadow-premium transition-shadow">
+            <div class="img-produto mb-3">${imgFoto}</div>
             <h4 class="font-semibold text-lg mb-2">${prod.nome}</h4>
             <p class="text-gray-300 text-sm mb-2">${prod.descricao || 'Sem descrição'}</p>
             <p class="text-sm text-gray-400 mb-2">Categoria: ${cat.nome}</p>
@@ -622,6 +676,52 @@ function salvarConfiguracoes() {
     mostrarToast('Configurações salvas com sucesso!', 'success');
 }
 
+// ====== ATUALIZAR CARDÁPIO PÚBLICO ======
+function atualizarCardapioPublico() {
+    const loja = JSON.parse(localStorage.getItem('dadosLoja')) || {};
+    const categorias = JSON.parse(localStorage.getItem('categorias')) || [];
+    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+
+    document.getElementById('nomeLojaCardapio').textContent = loja.nome || 'Minha Loja';
+    document.getElementById('horarioCardapio').textContent = loja.horario || 'Horário não informado';
+
+    let html = '';
+    categorias.forEach(cat => {
+        const produtosDaCat = produtos.filter(p => p.categoriaId === cat.id && p.disponivel);
+        if (produtosDaCat.length === 0) return;
+
+        html += `<h3 class="text-xl font-bold mt-6 mb-3 text-primaryLight border-b border-glassBorder pb-2">${cat.nome}</h3>`;
+        html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+
+        produtosDaCat.forEach(prod => {
+            const imgFoto = prod.foto ? `<img src="${prod.foto}" class="w-full h-full object-cover rounded-lg" alt="${prod.nome}">` : `<i class="fa fa-image text-3xl text-gray-500"></i>`;
+            html += `
+            <div class="glassmorphism p-4 rounded-xl">
+                <div class="img-produto mb-3">${imgFoto}</div>
+                <h4 class="font-semibold text-lg mb-2">${prod.nome}</h4>
+                <p class="text-gray-300 text-sm mb-3">${prod.descricao || 'Sem descrição'}</p>
+                <p class="text-xl font-bold text-accent">R$ ${prod.preco.toFixed(2).replace('.', ',')}</p>
+            </div>`;
+        });
+
+        html += `</div>`;
+    });
+
+    if (!html) {
+        html = `<div class="text-center py-12 text-gray-400">
+            <i class="fa fa-cutlery text-5xl mb-4"></i>
+            <p class="text-lg">Nenhum produto disponível no cardápio no momento.</p>
+        </div>`;
+    }
+
+    document.getElementById('conteudoCardapio').innerHTML = html;
+}
+
+// ====== ABRIR CARDÁPIO PÚBLICO ======
+function abrirCardapio() {
+    mostrarAba('cardapioPublico');
+}
+
 // ====== ENVIAR CADASTRO PARA WHATSAPP ======
 document.getElementById('formCadastro').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -661,11 +761,7 @@ document.getElementById('formLogin').addEventListener('submit', function(e) {
     }
 });
 
-// ====== OUTRAS FUNÇÕES ======
-function abrirCardapio() {
-    mostrarToast('Funcionalidade do cardápio em desenvolvimento!', 'info');
-}
-
+// ====== SAIR ======
 function sairConta() {
     mostrarAba('landing');
     mostrarToast('Desconectado com sucesso!', 'success');
@@ -675,14 +771,4 @@ function sairConta() {
 window.onload = carregarDados;
 
 // Fechar menu lateral ao clicar fora em telas pequenas
-document.addEventListener('click', e => {
-    const sidebar = document.getElementById('sidebar');
-    const btnMenu = e.target.closest('.fa-bars');
-    if (!sidebar.contains(e.target) && !btnMenu && window.innerWidth < 768) {
-        fecharSidebar();
-    }
-});
-</script>
-
-</body>
-</html>
+document.addEventListener('click
