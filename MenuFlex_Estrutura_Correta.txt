@@ -1,0 +1,30 @@
+MenuFlex/
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   └── script.js
+├── loja/
+│   └── cardapio.html
+├── admin/
+│   ├── dashboard.js
+│   ├── categorias.js
+│   ├── produtos.js
+│   └── pedidos.js
+└── supabase/
+    └── config.js
+
+IMPORTANTE:
+Renomeie:
+- estilo.css -> css/style.css
+- administrador/ -> admin/
+
+Os caminhos do HTML devem apontar para:
+<link rel="stylesheet" href="css/style.css">
+
+<script src="supabase/config.js"></script>
+<script src="admin/dashboard.js"></script>
+<script src="admin/categorias.js"></script>
+<script src="admin/produtos.js"></script>
+<script src="admin/pedidos.js"></script>
+<script src="js/script.js"></script>
