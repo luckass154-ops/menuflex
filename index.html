@@ -8,9 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -31,7 +28,10 @@
                         info: '#3B82F6'
                     },
                     fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-                    boxShadow: { premium: '0 8px 32px rgba(109, 40, 217, 0.25)', glass: '0 4px 24px rgba(0,0,0,0.2)' },
+                    boxShadow: {
+                        premium: '0 8px 32px rgba(109, 40, 217, 0.25)',
+                        glass: '0 4px 24px rgba(0,0,0,0.2)'
+                    },
                     backdropBlur: { sm: '4px', md: '8px', lg: '12px' }
                 }
             }
@@ -54,16 +54,17 @@
         .aba { display: none; }
         .aba.ativa { display: block; animation: fadeIn 0.3s ease-out; }
         .secao { display: none; }
-        .secao.ativa { display: block; }
+        .secao.ativa { display: block; animation: fadeIn 0.3s ease-out; }
         .tela-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(6px); }
         .tela-modal.ativa { display: flex; }
         .modal-conteudo { @apply glassmorphism rounded-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto scrollbar-thin; }
         .toast { position: fixed; bottom: 24px; right: 24px; z-index: 1000; padding: 12px 20px; border-radius: 12px; color: white; font-weight: 500; background: rgba(0,0,0,0.9); box-shadow: 0 6px 20px rgba(0,0,0,0.3); transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
         .toast.ativa { transform: translateY(0); opacity: 1; }
-        .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; @apply glassmorphism p-4; transition: transform 0.3s ease; }
+        .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; @apply glassmorphism p-4 z-50; transition: transform 0.3s ease; }
         .sidebar.fechada { transform: translateX(-100%); }
-        .conteudo-principal { margin-left: 260px; transition: margin-left 0.3s ease; }
+        .conteudo-principal { margin-left: 260px; transition: margin-left 0.3s ease; min-height: 100vh; }
         .conteudo-principal.expandido { margin-left: 0; }
+        .menu-ativo { @apply bg-primary/30 border-l-2 border-primaryLight; }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.ativa { transform: translateX(0); }
@@ -140,29 +141,6 @@
         </div>
     </section>
 
-    <section id="planos" class="py-20 px-4 bg-dark/30">
-        <div class="container mx-auto text-center">
-            <h3 class="text-3xl md:text-4xl font-bold mb-4">Escolha o plano ideal</h3>
-            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <div class="glassmorphism p-8 rounded-2xl">
-                    <h4 class="text-2xl font-bold mb-2">Starter</h4>
-                    <p class="text-4xl font-bold text-primaryLight mb-6">Grátis</p>
-                    <button onclick="mostrarAba('cadastro')" class="w-full py-3 rounded-lg bg-primary/20">Escolher</button>
-                </div>
-                <div class="bg-gradient-to-b from-primary/30 to-primary/10 border border-primaryLight p-8 rounded-2xl shadow-premium scale-[1.03]">
-                    <h4 class="text-2xl font-bold mb-2">Pro</h4>
-                    <p class="text-4xl font-bold text-accent mb-6">R$ 49,90/mês</p>
-                    <button onclick="mostrarAba('cadastro')" class="w-full py-3 rounded-lg bg-accent">Escolher</button>
-                </div>
-                <div class="glassmorphism p-8 rounded-2xl">
-                    <h4 class="text-2xl font-bold mb-2">Premium</h4>
-                    <p class="text-4xl font-bold text-primaryLight mb-6">R$ 89,90/mês</p>
-                    <button onclick="mostrarAba('cadastro')" class="w-full py-3 rounded-lg bg-primary/20">Escolher</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <footer class="bg-dark/50 border-t border-glassBorder py-8 text-center text-gray-400">
         <p>© 2026 MenuFlex - Todos os direitos reservados.</p>
     </footer>
@@ -226,74 +204,239 @@
     </div>
 </section>
 
-<!-- ============================== PAINEL ADMIN ============================== -->
+<!-- ============================== PAINEL ADMINISTRATIVO COMPLETO ============================== -->
 <section id="painel" class="aba min-h-screen flex">
+    <!-- Menu Lateral -->
     <aside id="sidebar" class="sidebar fechada md:fechada">
         <div class="flex justify-between items-center mb-8">
             <h3 class="text-xl font-bold bg-gradient-to-r from-primaryLight to-accent bg-clip-text text-transparent">MenuFlex</h3>
             <button class="md:hidden text-xl" onclick="fecharSidebar()">&times;</button>
         </div>
-        <nav class="space-y-2">
-            <button onclick="mostrarSecao('dashboard')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 secao-ativa">
-                <i class="fa fa-tachometer"></i> Dashboard
+        <nav class="space-y-1">
+            <button onclick="mostrarSecao('dashboard', this)" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 menu-ativo">
+                <i class="fa fa-tachometer w-6 text-center"></i> Dashboard
             </button>
-            <button onclick="mostrarSecao('produtos')" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
-                <i class="fa fa-cutlery"></i> Produtos
+            <button onclick="mostrarSecao('produtos', this)" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
+                <i class="fa fa-cutlery w-6 text-center"></i> Produtos
             </button>
-            <button onclick="sairConta()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-500/20 text-red-400 mt-8">
-                <i class="fa fa-sign-out"></i> Sair
+            <button onclick="mostrarSecao('categorias', this)" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
+                <i class="fa fa-th-large w-6 text-center"></i> Categorias
+            </button>
+            <button onclick="mostrarSecao('pedidos', this)" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
+                <i class="fa fa-shopping-bag w-6 text-center"></i> Pedidos
+            </button>
+            <button onclick="mostrarSecao('configuracoes', this)" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
+                <i class="fa fa-cog w-6 text-center"></i> Configurações
+            </button>
+            <button onclick="verCardapio()" class="menu-item w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10">
+                <i class="fa fa-external-link w-6 text-center"></i> Ver Cardápio
+            </button>
+            <button onclick="sairConta()" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-500/20 text-red-400 transition mt-8">
+                <i class="fa fa-sign-out w-6 text-center"></i> Sair
             </button>
         </nav>
     </aside>
 
+    <!-- Conteúdo Principal -->
     <div id="conteudoPrincipal" class="conteudo-principal expandido">
-        <header class="glassmorphism p-4 sticky top-0 flex justify-between items-center">
+        <header class="glassmorphism p-4 sticky top-0 z-40 flex justify-between items-center">
             <button class="md:hidden text-xl" onclick="abrirSidebar()"><i class="fa fa-bars"></i></button>
             <h4 class="text-lg font-semibold">Painel Administrativo</h4>
+            <div class="hidden md:flex items-center gap-2">
+                <span class="text-sm text-gray-300">Sessão ativa</span>
+            </div>
         </header>
-        <main class="p-6">
+
+        <main class="p-4 md:p-6">
+            <!-- Dashboard -->
             <div id="dashboard" class="secao ativa">
                 <h2 class="text-2xl font-bold mb-6">Bem-vindo ao MenuFlex!</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="glassmorphism p-5 rounded-xl hover:shadow-premium transition-shadow">
+                        <p class="text-gray-300 text-sm">Pedidos Hoje</p>
+                        <h3 class="text-3xl font-bold mt-2 text-primaryLight">0</h3>
+                    </div>
+                    <div class="glassmorphism p-5 rounded-xl hover:shadow-premium transition-shadow">
+                        <p class="text-gray-300 text-sm">Faturamento Hoje</p>
+                        <h3 class="text-3xl font-bold mt-2 text-accent">R$ 0,00</h3>
+                    </div>
+                    <div class="glassmorphism p-5 rounded-xl hover:shadow-premium transition-shadow">
+                        <p class="text-gray-300 text-sm">Produtos Cadastrados</p>
+                        <h3 class="text-3xl font-bold mt-2 text-info">0</h3>
+                    </div>
+                    <div class="glassmorphism p-5 rounded-xl hover:shadow-premium transition-shadow">
+                        <p class="text-gray-300 text-sm">Visualizações</p>
+                        <h3 class="text-3xl font-bold mt-2 text-success">0</h3>
+                    </div>
+                </div>
                 <div class="glassmorphism p-5 rounded-xl">
-                    <p class="text-gray-300">Aqui você gerencia seu cardápio, pedidos e tudo mais.</p>
+                    <h4 class="text-lg font-semibold mb-4">Primeiros Passos</h4>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center gap-2"><i class="fa fa-check-circle text-success"></i> Configure os dados da sua loja</li>
+                        <li class="flex items-center gap-2"><i class="fa fa-circle-o text-gray-500"></i> Cadastre suas categorias</li>
+                        <li class="flex items-center gap-2"><i class="fa fa-circle-o text-gray-500"></i> Adicione seus produtos</li>
+                        <li class="flex items-center gap-2"><i class="fa fa-circle-o text-gray-500"></i> Compartilhe seu cardápio</li>
+                    </ul>
                 </div>
             </div>
+
+            <!-- Produtos -->
             <div id="produtos" class="secao">
-                <h2 class="text-2xl font-bold mb-6">Seus Produtos</h2>
-                <div class="glassmorphism p-5 rounded-xl">
-                    <p class="text-gray-300">Área para cadastrar e editar produtos.</p>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Gerenciar Produtos</h2>
+                    <button onclick="abrirModal('modalProduto')" class="px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition flex items-center gap-2">
+                        <i class="fa fa-plus"></i> Novo Produto
+                    </button>
+                </div>
+                <div class="glassmorphism p-4 rounded-xl">
+                    <input type="text" placeholder="Buscar produto pelo nome..." class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder mb-4">
+                    <div class="text-center py-10 text-gray-400">
+                        <i class="fa fa-cutlery text-4xl mb-3"></i>
+                        <p>Nenhum produto cadastrado ainda.</p>
+                        <p class="text-sm">Clique em "Novo Produto" para começar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categorias -->
+            <div id="categorias" class="secao">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Categorias</h2>
+                    <button onclick="abrirModal('modalCategoria')" class="px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition flex items-center gap-2">
+                        <i class="fa fa-plus"></i> Nova Categoria
+                    </button>
+                </div>
+                <div class="glassmorphism p-4 rounded-xl">
+                    <div class="text-center py-10 text-gray-400">
+                        <i class="fa fa-th-large text-4xl mb-3"></i>
+                        <p>Nenhuma categoria cadastrada.</p>
+                        <p class="text-sm">Ex: Bebidas, Porções, Pratos Principais</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pedidos -->
+            <div id="pedidos" class="secao">
+                <h2 class="text-2xl font-bold mb-6">Pedidos Recebidos</h2>
+                <div class="glassmorphism p-4 rounded-xl">
+                    <div class="text-center py-10 text-gray-400">
+                        <i class="fa fa-shopping-bag text-4xl mb-3"></i>
+                        <p>Nenhum pedido recebido até o momento.</p>
+                        <p class="text-sm">Os pedidos aparecerão aqui e também no seu WhatsApp.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configurações -->
+            <div id="configuracoes" class="secao">
+                <h2 class="text-2xl font-bold mb-6">Dados da Loja</h2>
+                <div class="glassmorphism p-6 rounded-xl space-y-5">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm mb-2 text-gray-300">Nome da Loja</label>
+                            <input type="text" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="Ex: Pizzaria da Esquina">
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-2 text-gray-300">WhatsApp para Pedidos</label>
+                            <input type="tel" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="(86) 99999-9999">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-2 text-gray-300">Horário de Funcionamento</label>
+                        <textarea rows="2" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="Ex: Segunda a Sábado: 18h às 23h | Domingo: Fechado"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-2 text-gray-300">Valor Mínimo do Pedido (R$)</label>
+                        <input type="number" step="0.01" min="0" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" placeholder="0,00">
+                    </div>
+                    <button onclick="mostrarToast('Configurações salvas com sucesso!', 'success')" class="px-6 py-3 rounded-lg bg-accent hover:bg-accent/90 font-semibold transition">Salvar Alterações</button>
                 </div>
             </div>
         </main>
     </div>
 </section>
 
+<!-- ============================== MODAIS ============================== -->
+<div id="modalProduto" class="tela-modal">
+    <div class="modal-conteudo">
+        <h3 class="text-xl font-bold mb-5">Cadastrar Produto</h3>
+        <form class="space-y-4">
+            <div>
+                <label class="block text-sm mb-1 text-gray-300">Nome do Produto</label>
+                <input type="text" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+            </div>
+            <div>
+                <label class="block text-sm mb-1 text-gray-300">Descrição</label>
+                <textarea rows="2" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder"></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-sm mb-1 text-gray-300">Preço (R$)</label>
+                    <input type="number" step="0.01" min="0" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 text-gray-300">Categoria</label>
+                    <select class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+                        <option value="">Selecione</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="disp" checked>
+                <label for="disp" class="text-sm">Produto disponível para venda</label>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-lg bg-primary hover:bg-primary/90 font-semibold mt-4">Salvar Produto</button>
+        </form>
+        <button onclick="fecharModal('modalProduto')" class="w-full mt-4 py-2 rounded-lg bg-white/10 hover:bg-white/20">Cancelar</button>
+    </div>
+</div>
+
+<div id="modalCategoria" class="tela-modal">
+    <div class="modal-conteudo">
+        <h3 class="text-xl font-bold mb-5">Nova Categoria</h3>
+        <form class="space-y-4">
+            <div>
+                <label class="block text-sm mb-1 text-gray-300">Nome da Categoria</label>
+                <input type="text" class="w-full p-3 rounded-lg bg-white/10 border border-glassBorder" required>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-lg bg-primary hover:bg-primary/90 font-semibold mt-4">Salvar</button>
+        </form>
+        <button onclick="fecharModal('modalCategoria')" class="w-full mt-4 py-2 rounded-lg bg-white/10 hover:bg-white/20">Cancelar</button>
+    </div>
+</div>
+
 <!-- ============================== SCRIPT COMPLETO ============================== -->
 <script>
-// Funções globais de navegação
+// Navegação entre telas
 function mostrarAba(id) {
     document.querySelectorAll('.aba').forEach(aba => aba.classList.remove('ativa'));
     document.getElementById(id).classList.add('ativa');
     window.scrollTo(0, 0);
 }
 
-function mostrarSecao(id) {
+// Navegação entre seções do painel
+function mostrarSecao(id, botao) {
     document.querySelectorAll('.secao').forEach(sec => sec.classList.remove('ativa'));
-    document.querySelectorAll('.secao-ativa').forEach(btn => btn.classList.remove('secao-ativa'));
     document.getElementById(id).classList.add('ativa');
-    event.currentTarget.classList.add('secao-ativa');
+    document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('menu-ativo'));
+    if (botao) botao.classList.add('menu-ativo');
 }
 
+// Controles de menu
 function abrirMenuMobile() { document.getElementById('menuMobile').style.display = 'flex'; }
 function fecharMenuMobile() { document.getElementById('menuMobile').style.display = 'none'; }
 function abrirSidebar() { document.getElementById('sidebar').classList.add('ativa'); }
 function fecharSidebar() { document.getElementById('sidebar').classList.remove('ativa'); }
 
-function sairConta() {
-    mostrarAba('landing');
-    mostrarToast('Desconectado com sucesso!', 'success');
-}
+// Modais
+function abrirModal(id) { document.getElementById(id).classList.add('ativa'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('ativa'); }
 
+// Outras funções
+function verCardapio() { mostrarToast('Funcionalidade em desenvolvimento!', 'info'); }
+function sairConta() { mostrarAba('landing'); mostrarToast('Desconectado com sucesso!', 'success'); }
+
+// Notificações
 function mostrarToast(mensagem, tipo = '') {
     const t = document.getElementById('toast');
     t.textContent = mensagem;
@@ -302,16 +445,25 @@ function mostrarToast(mensagem, tipo = '') {
 }
 
 // Formulários
-document.getElementById('formCadastro').addEventListener('submit', function(e) {
+document.getElementById('formCadastro').addEventListener('submit', e => {
     e.preventDefault();
     mostrarToast('Conta criada com sucesso!', 'success');
     mostrarAba('painel');
 });
 
-document.getElementById('formLogin').addEventListener('submit', function(e) {
+document.getElementById('formLogin').addEventListener('submit', e => {
     e.preventDefault();
-    mostrarToast('Login realizado!', 'success');
+    mostrarToast('Login realizado com sucesso!', 'success');
     mostrarAba('painel');
+});
+
+// Fechar menu lateral ao clicar fora em telas pequenas
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    const btnMenu = e.target.closest('.fa-bars');
+    if (!sidebar.contains(e.target) && !btnMenu && window.innerWidth < 768) {
+        fecharSidebar();
+    }
 });
 </script>
 
