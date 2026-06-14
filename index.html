@@ -429,7 +429,7 @@
     </div>
 </div>
 
-<!-- ============================== SCRIPT FUNCIONAL COMPLETO ============================== -->
+<!-- ============================== SCRIPT COMPLETO E FUNCIONAL ============================== -->
 <script>
 // ====== FUNÇÕES GERAIS ======
 function mostrarAba(id) {
@@ -768,4 +768,5 @@ function sairConta() {
 // Fechar menu lateral ao clicar fora em telas pequenas
 document.addEventListener('click', e => {
     const sidebar = document.getElementById('sidebar');
-    const btn
+    const btnAbrir = document.querySelector('button[onclick="abrirSidebar()"]');
+    if (window.inner
